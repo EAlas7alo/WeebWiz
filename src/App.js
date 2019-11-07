@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Modal from 'react-modal'
+import AddVideoView from './components/AddQuizEntry/AddVideoView';
 
 function App() {
+  const [isModalOpen, setModalOpen] = useState(false)
+  Modal.setAppElement('#root')
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="App" id="root">
+      <h1>
+        WeebWiz
+      </h1>
+      <div className="content">
+        <button type="button" onClick={() => setModalOpen(true)}>Add a video</button>
+        <Modal
+          isOpen={isModalOpen}
         >
-          Learn React
-        </a>
-      </header>
+          <button type="button" onClick={() => setModalOpen(false)}>Close modal</button>
+          <AddVideoView />
+        </Modal>
+      </div>
     </div>
   );
 }
