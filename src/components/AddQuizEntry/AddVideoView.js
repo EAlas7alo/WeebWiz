@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Youtube from 'react-youtube'
+import parseYoutubeUrl from '../../logic/youtubeUrlParser'
 import VideoLengthSliderContainer from './VideoLengthSliderContainer'
 
 /*
@@ -9,26 +10,42 @@ import VideoLengthSliderContainer from './VideoLengthSliderContainer'
   Video input field sanitization
 */
 
-const AddVideoView = ({ startTime, endTime }) => {
+const AddVideoView = (props) => {
+  const [linkField, setLinkField] = useState('')
   const [videoUrl, setVideoUrl] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [videoMeta, setVideoMeta] = useState({ min: 0, max: 0 })
+  const [runTime, setRunTime] = useState({ start: 0, end: 0 })
 
-  const handleLinkFieldChange = (event) => {
-    setVideoUrl(event.target.value)
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    setIsSubmitted(true)
-  }
-
-  const playerOptions = {
+  const [playerOptions, setPlayerOptions] = useState({
     height: '390',
     width: '640',
     playerVars: {
       autoplay: 0,
     },
+  })
+  console.log(playerOptions)
+  useEffect(() => {
+    setPlayerOptions(playerOptions => {
+      return { ...playerOptions,
+        playerVars: { ...playerOptions.playerVars,
+          start: runTime.start,
+          end: runTime.end,
+        },
+      }
+    })
+  }, [runTime])
+
+  const handleLinkFieldChange = (event) => {
+    setLinkField(event.target.value)
+  }
+
+  const handleSubmit = (event) => {
+    const id = parseYoutubeUrl(linkField)
+    setVideoUrl(id)
+    setLinkField('')
+    event.preventDefault()
+    setIsSubmitted(true)
   }
 
   const onReady = (event) => {
@@ -40,7 +57,7 @@ const AddVideoView = ({ startTime, endTime }) => {
     <div>
       <form onSubmit={handleSubmit}>
         Video
-        <input type="text" name="quizlink" value={videoUrl} onChange={handleLinkFieldChange} />
+        <input type="text" name="quizlink" value={linkField} onChange={handleLinkFieldChange} />
         <input type="submit" value="+" />
       </form>
       {isSubmitted && (
@@ -50,7 +67,14 @@ const AddVideoView = ({ startTime, endTime }) => {
             opts={playerOptions}
             onReady={onReady}
           />
-          <VideoLengthSliderContainer videoMeta={videoMeta} />
+          <VideoLengthSliderContainer
+            videoMeta={videoMeta}
+            runTime={runTime}
+            setRunTime={setRunTime}
+          />
+          <div>
+            xd
+          </div>
         </div>
       )}
     </div>

@@ -2,28 +2,36 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import VideoLengthSlider from './VideoLengthSlider'
 
-const VideoLengthSliderContainer = ({ videoMeta }) => {
-  const [startTime, setStartTime] = useState(0)
-  const [endTime, setEndTime] = useState(1)
+const VideoLengthSliderContainer = ({ videoMeta, runTime, setRunTime }) => {
 
   useEffect(() => {
-    setEndTime(videoMeta.max)
-  }, [videoMeta])
+    setRunTime(runTime => {
+      return { ...runTime, end: videoMeta.max }
+    })
+  }, [videoMeta, setRunTime])
 
   return (
     <div>
       Start time:
       <VideoLengthSlider
         max={videoMeta.max}
-        value={startTime}
-        setTime={({ target }) => setStartTime(Math.min(target.value, endTime))}
+        value={runTime.start}
+        setTime={
+          ({ target }) => setRunTime(runTime => {
+            return { ...runTime, start: Math.min(target.value, runTime.end) }
+          })
+        }
       />
       <br />
       End time:
       <VideoLengthSlider
         max={videoMeta.max}
-        value={endTime}
-        setTime={({ target }) => setEndTime(Math.max(target.value, startTime))}
+        value={runTime.end}
+        setTime={
+          ({ target }) => setRunTime(runTime => {
+            return { ...runTime, end: Math.max(target.value, runTime.start) }
+          })
+        }
       />
     </div>
   );
@@ -34,6 +42,11 @@ VideoLengthSliderContainer.propTypes = {
     min: PropTypes.number,
     max: PropTypes.number.isRequired,
   }).isRequired,
+  runTime: PropTypes.shape({
+    start: PropTypes.number.isRequired,
+    end: PropTypes.number.isRequired,
+  }).isRequired,
+  setRunTime: PropTypes.func.isRequired,
 }
 
 export default VideoLengthSliderContainer
