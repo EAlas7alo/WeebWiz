@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 import Youtube from 'react-youtube'
 import parseYoutubeUrl from '../../logic/youtubeUrlParser'
 import VideoLengthSliderContainer from './VideoLengthSliderContainer'
+import { addVideo } from '../../redux/videoEntryReducer'
 
 /*
   TODOS
   Video input field sanitization
 */
 
-const AddVideoView = (props) => {
+const AddVideoView = ({ addVideo }) => {
   const [linkField, setLinkField] = useState('')
   const [videoUrl, setVideoUrl] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -24,7 +25,7 @@ const AddVideoView = (props) => {
       autoplay: 0,
     },
   })
-  console.log(playerOptions)
+
   useEffect(() => {
     setPlayerOptions(playerOptions => {
       return { ...playerOptions,
@@ -40,7 +41,7 @@ const AddVideoView = (props) => {
     setLinkField(event.target.value)
   }
 
-  const handleSubmit = (event) => {
+  const handleSearchVideo = (event) => {
     const id = parseYoutubeUrl(linkField)
     setVideoUrl(id)
     setLinkField('')
@@ -53,9 +54,20 @@ const AddVideoView = (props) => {
     // event.target.seekTo(startTime, true)
   }
 
+  const handleSubmit = () => {
+    if (isSubmitted) {
+      const newVideoEntry = {
+        videoId: videoUrl,
+        start: runTime.start,
+        end: runTime.end,
+      }
+      addVideo(newVideoEntry)
+    }
+  }
+
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSearchVideo}>
         Video
         <input type="text" name="quizlink" value={linkField} onChange={handleLinkFieldChange} />
         <input type="submit" value="+" />
@@ -73,12 +85,20 @@ const AddVideoView = (props) => {
             setRunTime={setRunTime}
           />
           <div>
-            xd
+            <button type="button" onClick={handleSubmit}>Submit</button>
           </div>
         </div>
       )}
     </div>
   )
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addVideo: video => {
+      dispatch(addVideo(video))
+    },
+  }
 }
 
 const mapStateToProps = state => {
@@ -88,4 +108,8 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(AddVideoView)
+AddVideoView.propTypes = {
+  addVideo: PropTypes.func.isRequired,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddVideoView)

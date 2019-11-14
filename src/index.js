@@ -2,15 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux'
-import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
 
-import mainReducer from './redux/mainReducer'
+import videoEntryReducer from './redux/videoEntryReducer'
 
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-const store = createStore(mainReducer)
+const reducers = combineReducers({
+  videoEntryReducer,
+})
+
+const store = createStore(reducers)
+const unsubscribe = store.subscribe(() => console.log(store.getState()))
 
 ReactDOM.render(
   <Provider store={store}>
