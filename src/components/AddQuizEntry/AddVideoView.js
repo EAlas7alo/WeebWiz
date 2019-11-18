@@ -2,21 +2,27 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Youtube from 'react-youtube'
+import uuid from 'uuid/v4'
+import styled from 'styled-components'
+import { findVideosById } from '../../logic/youtubeApi'
 import parseYoutubeUrl from '../../logic/youtubeUrlParser'
 import VideoLengthSliderContainer from './VideoLengthSliderContainer'
 import { addVideo } from '../../redux/videoEntryReducer'
 
-/*
-  TODOS
-  Video input field sanitization
-*/
+const SearchContainer = styled.div`
+  flex-direction: column
+`
 
-const AddVideoView = ({ addVideo }) => {
-  const [linkField, setLinkField] = useState('')
-  const [videoUrl, setVideoUrl] = useState('')
-  const [isSubmitted, setIsSubmitted] = useState(false)
+const AddVideoView = ({ addVideo, setModalOpen, videoData }) => {
+  // Set state values if editing an existing entry
+  const [linkField, setLinkField] = useState(videoData ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
+  const [videoId, setVideoId] = useState(videoData ? videoData.videoId : '')
+  const [isSubmitted, setIsSubmitted] = useState(videoData ? true : false)
   const [videoMeta, setVideoMeta] = useState({ min: 0, max: 0 })
-  const [runTime, setRunTime] = useState({ start: 0, end: 0 })
+  const [runTime, setRunTime] = useState({
+    start: videoData ? videoData.start : 0,
+    end: videoData ? videoData.end : 0 })
+  const [showError, setShowError] = useState(false)
 
   const [playerOptions, setPlayerOptions] = useState({
     height: '390',
@@ -37,16 +43,18 @@ const AddVideoView = ({ addVideo }) => {
     })
   }, [runTime])
 
-  const handleLinkFieldChange = (event) => {
-    setLinkField(event.target.value)
-  }
-
   const handleSearchVideo = (event) => {
-    const id = parseYoutubeUrl(linkField)
-    setVideoUrl(id)
-    setLinkField('')
-    event.preventDefault()
-    setIsSubmitted(true)
+    setLinkField(event.target.value)
+    const id = parseYoutubeUrl(event.target.value)
+    if (id === null) {
+      event.preventDefault()
+      setShowError(true)
+    } else {
+      setShowError(false)
+      setVideoId(id)
+      event.preventDefault()
+      setIsSubmitted(true)
+    }
   }
 
   const onReady = (event) => {
@@ -54,30 +62,47 @@ const AddVideoView = ({ addVideo }) => {
     // event.target.seekTo(startTime, true)
   }
 
-  const handleSubmit = () => {
-    if (isSubmitted) {
+  const onStateChange = (event) => {
+    console.log(event.target)
+  }
+
+  const handleSubmit = async () => {
+    if (isSubmitted && !videoData) {
+      const { result: { items } } = await findVideosById([videoId])
+      console.log(items)
       const newVideoEntry = {
-        videoId: videoUrl,
+        title: items[0].snippet.title,
+        id: uuid(),
+        videoId,
         start: runTime.start,
         end: runTime.end,
+        thumbnail: items[0].snippet.thumbnails.default.url,
       }
       addVideo(newVideoEntry)
+    } else if (isSubmitted && !videoData) {
+      
     }
+    setModalOpen(false)
   }
 
   return (
     <div>
-      <form onSubmit={handleSearchVideo}>
-        Video
-        <input type="text" name="quizlink" value={linkField} onChange={handleLinkFieldChange} />
-        <input type="submit" value="+" />
-      </form>
+      <SearchContainer>
+        <div>Paste your Youtube link</div>
+        <input type="text" value={linkField} onChange={handleSearchVideo} />
+      </SearchContainer>
+      {showError && (
+        <div>
+          There was an error with your YouTube link.
+        </div>
+      )}
       {isSubmitted && (
         <div>
           <Youtube
-            videoId={videoUrl}
+            videoId={videoId}
             opts={playerOptions}
             onReady={onReady}
+            onStateChange={onStateChange}
           />
           <VideoLengthSliderContainer
             videoMeta={videoMeta}
@@ -108,8 +133,18 @@ const mapStateToProps = state => {
   }
 }
 
+AddVideoView.defaultProps = {
+  videoData: null,
+}
+
 AddVideoView.propTypes = {
   addVideo: PropTypes.func.isRequired,
+  setModalOpen: PropTypes.func.isRequired,
+  videoData: PropTypes.shape({
+    start: PropTypes.number.isRequired,
+    end: PropTypes.number.isRequired,
+    videoId: PropTypes.string.isRequired,
+  }),
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddVideoView)

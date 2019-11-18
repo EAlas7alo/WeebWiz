@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types'
 import './App.css';
 import Modal from 'react-modal'
+import { connect } from 'react-redux'
 import asyncLoad from 'react-async-loader'
 import AddVideoView from './components/AddQuizEntry/AddVideoView';
 import QuizEntryList from './components/QuizEntryList';
@@ -35,10 +36,10 @@ const defaultQuizEntries = [
 ]
 
 
-function App({ gapi }) {
+function App({ gapi, videoList }) {
+  console.log(videoList)
   const [isModalOpen, setModalOpen] = useState(false)
   const [apiLoaded, setApiLoaded] = useState(false)
-  const [quizEntries, setQuizEntries] = useState(defaultQuizEntries)
   Modal.setAppElement('#root')
 
   useEffect(() => {
@@ -55,11 +56,14 @@ function App({ gapi }) {
   }, [])
 
   if (apiLoaded) {
-    const videoIds = quizEntries.map(entry => entry.videoId)
+    /* const videoIds = videoList.map(entry => entry.videoId)
     const getVideoData = async () => {
-      const { result: { items } } = findVideosById(videoIds)
+      const { result: { items } } = await findVideosById(videoIds)
       return items
     }
+    getVideoData().then(res => {
+      console.log(res)
+    }) */
   }
 
   return (
@@ -74,12 +78,17 @@ function App({ gapi }) {
           style={modalStyles}
         >
           <button type="button" onClick={() => setModalOpen(false)}>Close modal</button>
-          <AddVideoView />
+          <AddVideoView setModalOpen={setModalOpen} />
         </Modal>
-        <QuizEntryList entryList={quizEntries} />
+        <QuizEntryList />
       </div>
     </div>
   );
+}
+
+const mapStateToProps = state => {
+  const { videoEntryReducer: { videoList } } = state
+  return { videoList }
 }
 
 const mapScriptsToProps = (props) => {
@@ -97,9 +106,14 @@ App.defaultProps = {
 
 App.propTypes = {
   gapi: PropTypes.shape({
-    client: PropTypes.objectOf(PropTypes.object),
+    client: PropTypes.shape({
+      init: PropTypes.func.isRequired,
+    }),
     load: PropTypes.func.isRequired,
   }),
+  videoList: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
-export default asyncLoad(mapScriptsToProps)(App);
+const asyncApp = asyncLoad(mapScriptsToProps)(App)
+
+export default connect(mapStateToProps)(asyncApp);

@@ -1,20 +1,22 @@
-import { ADD_VIDEO, GET_VIDEOS } from './actions'
+import { ADD_VIDEO, GET_VIDEOS, EDIT_VIDEO } from './actions'
 
 const initialState = {
   videoList: [
     {
       id: '1',
-      title: 'sample title 1',
+      title: 'Ｊ Ｂ Ｐ Ｗ Ａ Ｖ Ｅ³　: A Jordan Peterson   Lofi Hip Hop Mix',
       videoId: 'H09e11JJwFk',
       start: 10,
       end: 20,
+      thumbnail: 'https://i.ytimg.com/vi/H09e11JJwFk/default.jpg',
     },
     {
       id: '2',
-      title: 'sample title 2',
+      title: 'yee mania',
       videoId: 'tha07Sasx60',
       start: 0,
       end: 30,
+      thumbnail: 'https://i.ytimg.com/vi/tha07Sasx60/default.jpg'
     },
   ],
 }
@@ -25,6 +27,14 @@ export default (state = initialState, action) => {
       return { ...state,
         videoList: [
           ...state.videoList,
+          action.video,
+        ],
+      }
+    case EDIT_VIDEO:
+      return {
+        ...state,
+        videoList: [
+          ...state.videoList.filter(video => video.id !== action.video.id),
           action.video,
         ]
       }
@@ -42,4 +52,11 @@ const addVideo = (video) => {
   }
 }
 
-export { addVideo }
+const editVideo = (video) => {
+  return {
+    type: EDIT_VIDEO,
+    video,
+  }
+}
+
+export { addVideo, editVideo }
