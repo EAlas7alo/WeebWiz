@@ -1,3 +1,4 @@
 # Weebwiz
 
-A quiz creator inspired by anime quizzes on Youtube and Kahoot!.  
+A quiz creator inspired by anime quizzes on Youtube and Kahoot!. 
+WIP
