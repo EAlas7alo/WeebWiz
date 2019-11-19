@@ -12,12 +12,12 @@ const Container = styled.div`
   margin-top: 5px
 `
 
-const QuizEntryList = ({ videoList }) => {
+const QuizEntryList = ({ videoList, onClickEntry }) => {
   console.log(videoList)
   return (
     <Container>
       {videoList.map(entry => (
-        <QuizEntry entry={entry} key={entry.id} />
+        <QuizEntry entry={entry} key={entry.id} onClickEntry={onClickEntry} />
       ))}
     </Container>
   );
@@ -35,6 +35,7 @@ QuizEntryList.propTypes = {
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
   })).isRequired,
+  onClickEntry: PropTypes.func.isRequired,
 }
 
 export default connect(mapStateToProps)(QuizEntryList)

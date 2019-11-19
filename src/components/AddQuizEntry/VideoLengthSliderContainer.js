@@ -4,12 +4,6 @@ import VideoLengthSlider from './VideoLengthSlider'
 
 const VideoLengthSliderContainer = ({ videoMeta, runTime, setRunTime }) => {
 
-  useEffect(() => {
-    setRunTime(runTime => {
-      return { ...runTime, end: videoMeta.max }
-    })
-  }, [videoMeta, setRunTime])
-
   return (
     <div>
       Start time:

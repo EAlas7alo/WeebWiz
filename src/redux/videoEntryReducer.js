@@ -34,13 +34,20 @@ export default (state = initialState, action) => {
       return {
         ...state,
         videoList: [
-          ...state.videoList.filter(video => video.id !== action.video.id),
-          action.video,
-        ]
+          ...state.videoList.map(video => {
+            console.log(video)
+            if (video.id === action.video.id) {
+              console.log('xd')
+              return action.video
+            }
+            return video
+          }),
+        ],
       }
     case GET_VIDEOS:
       return state.videoList
     default:
+      console.log('defauklt')
       return state
   }
 }

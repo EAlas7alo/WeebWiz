@@ -7,8 +7,6 @@ import asyncLoad from 'react-async-loader'
 import AddVideoView from './components/AddQuizEntry/AddVideoView';
 import QuizEntryList from './components/QuizEntryList';
 
-import { findVideosById } from './logic/youtubeApi'
-
 const modalStyles = {
   content: {
     top: '20%',
@@ -18,28 +16,11 @@ const modalStyles = {
   },
 }
 
-const defaultQuizEntries = [
-  {
-    id: '1',
-    title: 'sample title 1',
-    videoId: 'H09e11JJwFk',
-    start: 10,
-    end: 20,
-  },
-  {
-    id: '2',
-    title: 'sample title 2',
-    videoId: 'tha07Sasx60',
-    start: 0,
-    end: 30,
-  },
-]
-
-
 function App({ gapi, videoList }) {
   console.log(videoList)
   const [isModalOpen, setModalOpen] = useState(false)
   const [apiLoaded, setApiLoaded] = useState(false)
+  const [videoData, setVideoData] = useState(null)
   Modal.setAppElement('#root')
 
   useEffect(() => {
@@ -66,6 +47,19 @@ function App({ gapi, videoList }) {
     }) */
   }
 
+  const onClickEntry = (id) => {
+    const clickedEntry = videoList.filter(video => video.id === id)
+    if (!isModalOpen) {
+      setVideoData(clickedEntry[0])
+      setModalOpen(true)
+    }
+  }
+
+  const handleModalClose = () => {
+    setVideoData(null)
+    setModalOpen(false)
+  }
+
   return (
     <div className="App" id="root">
       <h1>
@@ -75,12 +69,17 @@ function App({ gapi, videoList }) {
         <button type="button" onClick={() => setModalOpen(true)}>Add a video</button>
         <Modal
           isOpen={isModalOpen}
+          onRequestClose={handleModalClose}
           style={modalStyles}
         >
-          <button type="button" onClick={() => setModalOpen(false)}>Close modal</button>
-          <AddVideoView setModalOpen={setModalOpen} />
+          <button type="button" onClick={handleModalClose}>Close modal</button>
+          <AddVideoView
+            setModalOpen={setModalOpen}
+            videoData={videoData}
+            setVideoData={setVideoData}
+          />
         </Modal>
-        <QuizEntryList />
+        <QuizEntryList onClickEntry={onClickEntry} />
       </div>
     </div>
   );

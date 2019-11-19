@@ -7,23 +7,23 @@ import styled from 'styled-components'
 import { findVideosById } from '../../logic/youtubeApi'
 import parseYoutubeUrl from '../../logic/youtubeUrlParser'
 import VideoLengthSliderContainer from './VideoLengthSliderContainer'
-import { addVideo } from '../../redux/videoEntryReducer'
+import { addVideo, editVideo } from '../../redux/videoEntryReducer'
 
 const SearchContainer = styled.div`
   flex-direction: column
 `
 
-const AddVideoView = ({ addVideo, setModalOpen, videoData }) => {
+const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoData }) => {
   // Set state values if editing an existing entry
   const [linkField, setLinkField] = useState(videoData ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
+  const [linkFieldDisabled, setLinkFieldDisabled] = useState(!!videoData)
   const [videoId, setVideoId] = useState(videoData ? videoData.videoId : '')
-  const [isSubmitted, setIsSubmitted] = useState(videoData ? true : false)
+  const [isSubmitted, setIsSubmitted] = useState(!!videoData)
   const [videoMeta, setVideoMeta] = useState({ min: 0, max: 0 })
   const [runTime, setRunTime] = useState({
     start: videoData ? videoData.start : 0,
     end: videoData ? videoData.end : 0 })
   const [showError, setShowError] = useState(false)
-
   const [playerOptions, setPlayerOptions] = useState({
     height: '390',
     width: '640',
@@ -43,7 +43,12 @@ const AddVideoView = ({ addVideo, setModalOpen, videoData }) => {
     })
   }, [runTime])
 
+  useEffect(() => {
+    setRunTime({ start: 0, end: 0 })
+  }, [linkField])
+
   const handleSearchVideo = (event) => {
+    setIsSubmitted(false)
     setLinkField(event.target.value)
     const id = parseYoutubeUrl(event.target.value)
     if (id === null) {
@@ -60,36 +65,46 @@ const AddVideoView = ({ addVideo, setModalOpen, videoData }) => {
   const onReady = (event) => {
     setVideoMeta({ min: 0, max: event.target.getDuration() })
     // event.target.seekTo(startTime, true)
-  }
-
-  const onStateChange = (event) => {
-    console.log(event.target)
+    console.log(event)
+    console.log(event.target.getDuration())
+    console.log('onready')
   }
 
   const handleSubmit = async () => {
-    if (isSubmitted && !videoData) {
+    if (isSubmitted) {
       const { result: { items } } = await findVideosById([videoId])
-      console.log(items)
       const newVideoEntry = {
         title: items[0].snippet.title,
-        id: uuid(),
+        id: videoData ? videoData.id : uuid(),
         videoId,
         start: runTime.start,
         end: runTime.end,
         thumbnail: items[0].snippet.thumbnails.default.url,
       }
-      addVideo(newVideoEntry)
-    } else if (isSubmitted && !videoData) {
-      
+      if (videoData) {
+        editVideo(newVideoEntry)
+      } else {
+        addVideo(newVideoEntry)
+      }
+      setVideoData(null)
     }
     setModalOpen(false)
+  }
+
+  const handleResetVideo = () => {
+    setIsSubmitted(false)
+    setLinkField('')
+    setLinkFieldDisabled(false)
   }
 
   return (
     <div>
       <SearchContainer>
         <div>Paste your Youtube link</div>
-        <input type="text" value={linkField} onChange={handleSearchVideo} />
+        <div>
+          <input type="text" value={linkField} onChange={handleSearchVideo} disabled={linkFieldDisabled ? 'disabled' : ''} />
+          <button type="button" onClick={handleResetVideo}>Reset video</button>
+        </div>
       </SearchContainer>
       {showError && (
         <div>
@@ -102,7 +117,6 @@ const AddVideoView = ({ addVideo, setModalOpen, videoData }) => {
             videoId={videoId}
             opts={playerOptions}
             onReady={onReady}
-            onStateChange={onStateChange}
           />
           <VideoLengthSliderContainer
             videoMeta={videoMeta}
@@ -123,6 +137,9 @@ const mapDispatchToProps = dispatch => {
     addVideo: video => {
       dispatch(addVideo(video))
     },
+    editVideo: video => {
+      dispatch(editVideo(video))
+    },
   }
 }
 
@@ -139,8 +156,11 @@ AddVideoView.defaultProps = {
 
 AddVideoView.propTypes = {
   addVideo: PropTypes.func.isRequired,
+  editVideo: PropTypes.func.isRequired,
+  setVideoData: PropTypes.func.isRequired,
   setModalOpen: PropTypes.func.isRequired,
   videoData: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
     videoId: PropTypes.string.isRequired,

@@ -11,10 +11,9 @@ const EntryContainer = styled.div`
   }
 `
 
-const QuizEntry = ({ entry }) => {
-  console.log(entry)
+const QuizEntry = ({ entry, onClickEntry }) => {
   return (
-    <EntryContainer>
+    <EntryContainer onClick={() => { onClickEntry(entry.id) }}>
       <div>{entry.title}</div>
       <img src={entry.thumbnail} alt="video thumbnail" />
     </EntryContainer>
@@ -28,7 +27,9 @@ QuizEntry.propTypes = {
     title: PropTypes.string.isRequired,
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
+    thumbnail: PropTypes.string.isRequired,
   }).isRequired,
+  onClickEntry: PropTypes.func.isRequired,
 }
 
 export default QuizEntry
