@@ -14,7 +14,7 @@ const EntryContainer = styled.div`
 const QuizEntry = ({ entry, onClickEntry }) => {
   return (
     <EntryContainer onClick={() => { onClickEntry(entry.id) }}>
-      <div>{entry.title}</div>
+      <div>{entry.entryTitle}</div>
       <img src={entry.thumbnail} alt="video thumbnail" />
     </EntryContainer>
   );
@@ -24,7 +24,8 @@ QuizEntry.propTypes = {
   entry: PropTypes.shape({
     id: PropTypes.string.isRequired,
     videoId: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    videoTitle: PropTypes.string.isRequired,
+    entryTitle: PropTypes.string.isRequired,
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
     thumbnail: PropTypes.string.isRequired,

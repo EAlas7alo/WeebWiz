@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Youtube from 'react-youtube'
 import uuid from 'uuid/v4'
 import styled from 'styled-components'
 import { findVideosById } from '../../logic/youtubeApi'
 import parseYoutubeUrl from '../../logic/youtubeUrlParser'
-import VideoLengthSliderContainer from './VideoLengthSliderContainer'
 import { addVideo, editVideo } from '../../redux/videoEntryReducer'
+import VideoSpecs from './VideoSpecs'
+import QuizAnswersContainer from './QuizAnswersContainer'
 
 const SearchContainer = styled.div`
   flex-direction: column
 `
 
 const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoData }) => {
-  // Set state values if editing an existing entry
   const [linkField, setLinkField] = useState(videoData ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
   const [linkFieldDisabled, setLinkFieldDisabled] = useState(!!videoData)
   const [videoId, setVideoId] = useState(videoData ? videoData.videoId : '')
+  const [entryTitle, setEntryTitle] = useState(videoData ? videoData.entryTitle : '')
   const [isSubmitted, setIsSubmitted] = useState(!!videoData)
   const [videoMeta, setVideoMeta] = useState({ min: 0, max: 0 })
   const [runTime, setRunTime] = useState({
@@ -33,18 +33,9 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
   })
 
   useEffect(() => {
-    setPlayerOptions(playerOptions => {
-      return { ...playerOptions,
-        playerVars: { ...playerOptions.playerVars,
-          start: runTime.start,
-          end: runTime.end,
-        },
-      }
-    })
-  }, [runTime])
-
-  useEffect(() => {
-    setRunTime({ start: 0, end: 0 })
+    if (!linkFieldDisabled) {
+      setRunTime({ start: 0, end: 0 })
+    }
   }, [linkField])
 
   const handleSearchVideo = (event) => {
@@ -65,16 +56,14 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
   const onReady = (event) => {
     setVideoMeta({ min: 0, max: event.target.getDuration() })
     // event.target.seekTo(startTime, true)
-    console.log(event)
-    console.log(event.target.getDuration())
-    console.log('onready')
   }
 
   const handleSubmit = async () => {
     if (isSubmitted) {
       const { result: { items } } = await findVideosById([videoId])
       const newVideoEntry = {
-        title: items[0].snippet.title,
+        entryTitle,
+        videoTitle: items[0].snippet.title,
         id: videoData ? videoData.id : uuid(),
         videoId,
         start: runTime.start,
@@ -97,6 +86,33 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
     setLinkFieldDisabled(false)
   }
 
+  const handleEntryTitleChange = (value) => {
+    setEntryTitle(value)
+  }
+  /*
+  const formik = useFormik({
+    initialValues: {
+      videoId: videoData ? videoData.videoId : '',
+      entryTitle: videoData ? videoData.entryTitle : '',
+      runTime: {
+        start: videoData ? videoData.start : 0,
+        end: videoData ? videoData.end : 0,
+      },
+      onSubmit: handleSubmit,
+    },
+  }) */
+
+  useEffect(() => {
+    setPlayerOptions(playerOptions => {
+      return { ...playerOptions,
+        playerVars: { ...playerOptions.playerVars,
+          start: runTime.start,
+          end: runTime.end,
+        },
+      }
+    })
+  }, [runTime])
+
   return (
     <div>
       <SearchContainer>
@@ -113,16 +129,17 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       )}
       {isSubmitted && (
         <div>
-          <Youtube
+          <h3>Title</h3>
+          <input type="text" value={entryTitle} onChange={({ target }) => handleEntryTitleChange(target.value)} />
+          <VideoSpecs
             videoId={videoId}
-            opts={playerOptions}
+            playerOptions={playerOptions}
             onReady={onReady}
-          />
-          <VideoLengthSliderContainer
             videoMeta={videoMeta}
             runTime={runTime}
             setRunTime={setRunTime}
           />
+          <QuizAnswersContainer id={videoData ? videoData.id : undefined} />
           <div>
             <button type="button" onClick={handleSubmit}>Submit</button>
           </div>
@@ -164,6 +181,7 @@ AddVideoView.propTypes = {
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
     videoId: PropTypes.string.isRequired,
+    entryTitle: PropTypes.string.isRequired,
   }),
 }
 

@@ -13,7 +13,6 @@ const Container = styled.div`
 `
 
 const QuizEntryList = ({ videoList, onClickEntry }) => {
-  console.log(videoList)
   return (
     <Container>
       {videoList.map(entry => (
