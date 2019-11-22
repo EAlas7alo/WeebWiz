@@ -12,24 +12,25 @@ const NumberInput = styled.input`
   width: 60px
 `
 
-const VideoLengthSliderContainer = ({ videoMeta, runTime, setRunTime }) => {
-  console.log(videoMeta)
+const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
   const handleRunTimeChangeStart = (value) => {
-    setRunTime(runTime => {
-      return { ...runTime, start: Math.trunc(Math.min(value, runTime.end)) }
+    dispatch({
+      type: 'add',
+      field: 'start',
+      value: Math.trunc(Math.min(value, runTime.end)),
     })
   }
 
   const handleRunTimeChangeEnd = (value) => {
-    setRunTime(runTime => {
-      return { ...runTime,
-        end: Math.trunc(
-          Math.min(
-            Math.max(value, runTime.start),
-            videoMeta.max,
-          ),
+    dispatch({
+      type: 'add',
+      field: 'end',
+      value: Math.trunc(
+        Math.min(
+          Math.max(value, runTime.start),
+          videoMeta.max,
         ),
-      }
+      ),
     })
   }
 
@@ -40,7 +41,6 @@ const VideoLengthSliderContainer = ({ videoMeta, runTime, setRunTime }) => {
       </div>
       <TimerContainer>
         <div>
-
           <VideoLengthSlider
             max={videoMeta.max}
             value={runTime.start}
@@ -86,7 +86,7 @@ VideoLengthSliderContainer.propTypes = {
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
   }).isRequired,
-  setRunTime: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 }
 
 export default VideoLengthSliderContainer

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 
 const initialState = {
   answers: null,
-  end: 0,
   start: 0,
+  end: 0,
   videoId: '',
   entryTitle: '',
   videoTitle: '',
@@ -24,15 +24,9 @@ const entryReducer = (state = initialState, action) => {
 }
 
 function useEntry(entry) {
-  /*const [videoId, setVideoId] = useState(videoData ? videoData.videoId : '')
-  const [entryTitle, setEntryTitle] = useState(videoData ? videoData.entryTitle : '')
-  const [videoMeta, setVideoMeta] = useState({ min: 0, max: 0 })
-  const [runTime, setRunTime] = useState({
-    start: videoData ? videoData.start : 0,
-    end: videoData ? videoData.end : 0 })*/
   const initializedEntry = entry || initialState
   const [state, dispatch] = useReducer(entryReducer, initializedEntry)
-
+  console.log(state)
   return {
     state,
     dispatch,

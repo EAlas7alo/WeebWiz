@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import Youtube from 'react-youtube'
 import VideoLengthSliderContainer from './VideoLengthSliderContainer'
 
-function VideoSpecs({ videoId, playerOptions, onReady, videoMeta, runTime, setRunTime }) {
-
+function VideoSpecs({ videoId, playerOptions, onReady, videoMeta, runTime, dispatch }) {
   return (
     <div>
       <Youtube
@@ -15,7 +14,7 @@ function VideoSpecs({ videoId, playerOptions, onReady, videoMeta, runTime, setRu
       <VideoLengthSliderContainer
         videoMeta={videoMeta}
         runTime={runTime}
-        setRunTime={setRunTime}
+        dispatch={dispatch}
       />
     </div>
   )
@@ -46,7 +45,7 @@ VideoSpecs.propTypes = {
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
   }).isRequired,
-  setRunTime: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 }
 
 export default VideoSpecs

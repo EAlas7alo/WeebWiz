@@ -5,7 +5,6 @@ import uuid from 'uuid/v4'
 import styled from 'styled-components'
 import { findVideosById } from '../../logic/youtubeApi'
 import parseYoutubeUrl from '../../logic/youtubeUrlParser'
-import entryReducer from '../hooks/useEntry'
 import { addVideo, editVideo } from '../../redux/videoEntryReducer'
 import VideoSpecs from './VideoSpecs'
 import QuizAnswersContainer from './QuizAnswersContainer'
@@ -18,13 +17,8 @@ const SearchContainer = styled.div`
 const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoData }) => {
   const [linkField, setLinkField] = useState(videoData ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
   const [linkFieldDisabled, setLinkFieldDisabled] = useState(!!videoData)
-  // const [videoId, setVideoId] = useState(videoData ? videoData.videoId : '')
-  // const [entryTitle, setEntryTitle] = useState(videoData ? videoData.entryTitle : '')
   const [isSubmitted, setIsSubmitted] = useState(!!videoData)
   const [videoMeta, setVideoMeta] = useState({ min: 0, max: 0 })
-  /* const [runTime, setRunTime] = useState({
-    start: videoData ? videoData.start : 0,
-    end: videoData ? videoData.end : 0 }) */
   const [showError, setShowError] = useState(false)
   const [playerOptions, setPlayerOptions] = useState({
     height: '390',
@@ -37,12 +31,17 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
   const { state: {
     videoId,
     entryTitle,
-    runTime,
+    start,
+    end,
   }, dispatch } = useEntry(videoData)
 
   useEffect(() => {
     if (!linkFieldDisabled) {
-      setRunTime({ start: 0, end: 0 })
+      dispatch({
+        type: 'add',
+        start: 0,
+        end: 0,
+      })
     }
   }, [linkField])
 
@@ -55,7 +54,11 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       setShowError(true)
     } else {
       setShowError(false)
-      setVideoId(id)
+      dispatch({
+        type: 'add',
+        field: 'videoId',
+        value: id,
+      })
       event.preventDefault()
       setIsSubmitted(true)
     }
@@ -74,8 +77,8 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
         videoTitle: items[0].snippet.title,
         id: videoData ? videoData.id : uuid(),
         videoId,
-        start: runTime.start,
-        end: runTime.end,
+        start,
+        end,
         thumbnail: items[0].snippet.thumbnails.default.url,
       }
       if (videoData) {
@@ -95,36 +98,23 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
   }
 
   const handleEntryTitleChange = (value) => {
-    setEntryTitle(value)
     dispatch({
       type: 'add',
       field: 'entryTitle',
       value,
     })
   }
-  /*
-  const formik = useFormik({
-    initialValues: {
-      videoId: videoData ? videoData.videoId : '',
-      entryTitle: videoData ? videoData.entryTitle : '',
-      runTime: {
-        start: videoData ? videoData.start : 0,
-        end: videoData ? videoData.end : 0,
-      },
-      onSubmit: handleSubmit,
-    },
-  }) */
 
   useEffect(() => {
     setPlayerOptions(playerOptions => {
       return { ...playerOptions,
         playerVars: { ...playerOptions.playerVars,
-          start: runTime.start,
-          end: runTime.end,
+          start,
+          end,
         },
       }
     })
-  }, [runTime])
+  }, [start, end])
 
   return (
     <div>
@@ -143,14 +133,17 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       {isSubmitted && (
         <div>
           <h3>Title</h3>
-          <input type="text" value={state.entryTitle} onChange={({ target }) => handleEntryTitleChange(target.value)} />
+          <input type="text" value={entryTitle} onChange={({ target }) => handleEntryTitleChange(target.value)} />
           <VideoSpecs
             videoId={videoId}
             playerOptions={playerOptions}
             onReady={onReady}
             videoMeta={videoMeta}
-            runTime={runTime}
-            setRunTime={setRunTime}
+            runTime={{
+              start,
+              end,
+            }}
+            dispatch={dispatch}
           />
           <QuizAnswersContainer id={videoData ? videoData.id : null} />
           <div>

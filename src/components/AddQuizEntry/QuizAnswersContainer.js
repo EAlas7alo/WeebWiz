@@ -1,29 +1,52 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 import QuizAnswer from './QuizAnswer'
 
-function QuizAnswersContainer(props) {
+const AnswerColumn = styled.div`
+  flex-direction: column
+  margin-left: auto
+  flex-grow: 1
+`
+
+const AnswerTable = styled.div`
+  border: 2px solid red
+  display: flex
+`
+
+function QuizAnswersContainer({ answers }) {
 
   const renderNewEntry = () => {
 
   }
 
   const renderExistingEntry = () => {
+    const firstColumn = answers.slice(0, 2)
+    const secondColumn = answers.slice(2)
+    console.log(answers)
+    console.log(secondColumn)
     return (
-      <div>
-        {props.answers.map(answer => (
-          <QuizAnswer answer={answer} key={answer.pos} />
-        ))}
-      </div>
+      <AnswerTable>
+        <AnswerColumn>
+          {firstColumn.map(answer => (
+            <QuizAnswer answer={answer} key={answer.pos} horOrientation='right' />
+          ))}
+        </AnswerColumn>
+        <AnswerColumn>
+          {secondColumn.map(answer => (
+            <QuizAnswer answer={answer} key={answer.pos} horOrientation='left' />
+          ))}
+        </AnswerColumn>
+      </AnswerTable>
     )
   }
   return (
     <div>
-      {props.answers === null && (
+      {answers === null && (
         renderNewEntry()
       )}
-      {props.answers && (
+      {answers && (
         renderExistingEntry()
       )}
     </div>

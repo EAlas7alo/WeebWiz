@@ -1,19 +1,27 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
+
+const Answer = styled.div`
+  border: 1px solid blue
+  justify-content: center
+  display: flex
+`
 
 function QuizAnswer({ answer }) {
   return (
-    <div>
+    <Answer pos={answer.pos}>
       <div>
         {answer.text}
       </div>
-    </div>
+    </Answer>
   )
 }
 
 QuizAnswer.propTypes = {
   answer: PropTypes.shape({
     text: PropTypes.string.isRequired,
+    pos: PropTypes.number.isRequired,
   }).isRequired,
 }
 

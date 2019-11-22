@@ -9,7 +9,7 @@ import QuizEntryList from './components/QuizEntryList';
 
 const modalStyles = {
   content: {
-    top: '20%',
+    top: '5%',
     left: '25%',
     right: '25%',
     bottom: 'auto',
