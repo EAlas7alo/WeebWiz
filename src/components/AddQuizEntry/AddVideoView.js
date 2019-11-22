@@ -139,7 +139,7 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
             runTime={runTime}
             setRunTime={setRunTime}
           />
-          <QuizAnswersContainer id={videoData ? videoData.id : undefined} />
+          <QuizAnswersContainer id={videoData ? videoData.id : null} />
           <div>
             <button type="button" onClick={handleSubmit}>Submit</button>
           </div>
