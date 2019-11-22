@@ -35,11 +35,10 @@ QuizAnswersContainer.defaultProps = {
 }
 
 QuizAnswersContainer.propTypes = {
-  answers: PropTypes.arrayOf(PropTypes.object)
+  answers: PropTypes.arrayOf(PropTypes.object),
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state)
   if (!ownProps.id) return { answers: null }
   const { answers } = state.videoEntryReducer.videoList.filter(video => video.id === ownProps.id)[0]
   return { answers }
