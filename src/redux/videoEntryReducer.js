@@ -44,22 +44,22 @@ const initialState = {
       answers: [
         {
           pos: 1,
-          answer: 'yee',
+          text: 'yee',
           correct: true,
         },
         {
           pos: 2,
-          answer: 'pepe',
+          text: 'pepe',
           correct: false,
         },
         {
           pos: 3,
-          answer: 'pikachu',
+          text: 'pikachu',
           correct: false,
         },
         {
           pos: 4,
-          answer: 'jarmio',
+          text: 'jarmio',
           correct: false,
         },
       ],

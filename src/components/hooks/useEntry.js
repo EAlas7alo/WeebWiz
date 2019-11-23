@@ -2,7 +2,28 @@ import React, { useState, useEffect, useReducer } from 'react'
 import PropTypes from 'prop-types'
 
 const initialState = {
-  answers: null,
+  answers: [
+    {
+      pos: 1,
+      text: '',
+      correct: false,
+    },
+    {
+      pos: 2,
+      text: '',
+      correct: false,
+    },
+    {
+      pos: 3,
+      text: '',
+      correct: false,
+    },
+    {
+      pos: 4,
+      text: '',
+      correct: false,
+    },
+  ],
   start: 0,
   end: 0,
   videoId: '',

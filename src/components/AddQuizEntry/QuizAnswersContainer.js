@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
 import QuizAnswer from './QuizAnswer'
 
@@ -15,40 +14,63 @@ const AnswerTable = styled.div`
   display: flex
 `
 
-function QuizAnswersContainer({ answers }) {
+function QuizAnswersContainer({ answers, dispatch }) {
 
-  const renderNewEntry = () => {
-
+  const handleToggleAnswer = (pos) => {
+    const answer = answers.find(answer => answer.pos === pos)
+    dispatch({
+      type: 'add',
+      field: 'answers',
+      value: [
+        ...answers.filter(answer => answer.pos !== pos),
+        {
+          ...answer,
+          correct: !answer.correct,
+        },
+      ],
+    })
   }
 
-  const renderExistingEntry = () => {
-    const firstColumn = answers.slice(0, 2)
-    const secondColumn = answers.slice(2)
-    console.log(answers)
-    console.log(secondColumn)
+  const handleAnswerTextChange = (pos, text) => {
+    const answer = answers.find(answer => answer.pos === pos)
+    dispatch({
+      type: 'add',
+      field: 'answers',
+      value: [
+        ...answers.filter(answer => answer.pos !== pos),
+        {
+          ...answer,
+          text,
+        },
+      ],
+    })
+  }
+
+  const renderAnswers = () => {
+    const sortedAnswers = answers.sort((a, b) => a.pos - b.pos)
+    const firstColumn = sortedAnswers.filter(answer => answer.pos < 3)
+    const secondColumn = sortedAnswers.filter(answer => answer.pos > 2)
+    const columns = [firstColumn, secondColumn]
     return (
       <AnswerTable>
-        <AnswerColumn>
-          {firstColumn.map(answer => (
-            <QuizAnswer answer={answer} key={answer.pos} horOrientation='right' />
-          ))}
-        </AnswerColumn>
-        <AnswerColumn>
-          {secondColumn.map(answer => (
-            <QuizAnswer answer={answer} key={answer.pos} horOrientation='left' />
-          ))}
-        </AnswerColumn>
+        {columns.map(column => (
+          <AnswerColumn key={column[0].pos}>
+            {column.map(answer => (
+              <QuizAnswer
+                answer={answer}
+                key={answer.pos}
+                onPressCorrect={handleToggleAnswer}
+                onTextChange={handleAnswerTextChange}
+              />
+            ))}
+          </AnswerColumn>
+        ))}
       </AnswerTable>
     )
   }
   return (
     <div>
-      {answers === null && (
-        renderNewEntry()
-      )}
-      {answers && (
-        renderExistingEntry()
-      )}
+      {renderAnswers()}
     </div>
   )
 }
@@ -59,12 +81,8 @@ QuizAnswersContainer.defaultProps = {
 
 QuizAnswersContainer.propTypes = {
   answers: PropTypes.arrayOf(PropTypes.object),
+  dispatch: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = (state, ownProps) => {
-  if (!ownProps.id) return { answers: null }
-  const { answers } = state.videoEntryReducer.videoList.filter(video => video.id === ownProps.id)[0]
-  return { answers }
-}
 
-export default connect(mapStateToProps)(QuizAnswersContainer)
+export default QuizAnswersContainer

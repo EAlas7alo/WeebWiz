@@ -12,6 +12,11 @@ const NumberInput = styled.input`
   width: 60px
 `
 
+const Container = styled.div`
+  display: flex
+  justify-content: center
+`
+
 const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
   const handleRunTimeChangeStart = (value) => {
     dispatch({
@@ -35,7 +40,7 @@ const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
   }
 
   return (
-    <div>
+    <Container>
       <div>
         Start time:
       </div>
@@ -57,7 +62,6 @@ const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
         />
       </TimerContainer>
 
-      <br />
       <div>End time:</div>
       <TimerContainer>
         <VideoLengthSlider
@@ -73,7 +77,7 @@ const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
           onChange={({ target }) => handleRunTimeChangeEnd(target.value)}
         />
       </TimerContainer>
-    </div>
+    </Container>
   );
 }
 

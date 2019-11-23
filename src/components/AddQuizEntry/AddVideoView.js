@@ -11,6 +11,12 @@ import QuizAnswersContainer from './QuizAnswersContainer'
 import useEntry from '../hooks/useEntry'
 
 const SearchContainer = styled.div`
+  
+`
+
+const MainContainer = styled.div`
+  display: flex
+  align-items: center
   flex-direction: column
 `
 
@@ -29,6 +35,7 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
   })
 
   const { state: {
+    answers,
     videoId,
     entryTitle,
     start,
@@ -80,6 +87,7 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
         start,
         end,
         thumbnail: items[0].snippet.thumbnails.default.url,
+        answers,
       }
       if (videoData) {
         editVideo(newVideoEntry)
@@ -117,11 +125,17 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
   }, [start, end])
 
   return (
-    <div>
+    <MainContainer>
       <SearchContainer>
         <div>Paste your Youtube link</div>
         <div>
-          <input type="text" value={linkField} onChange={handleSearchVideo} disabled={linkFieldDisabled ? 'disabled' : ''} />
+          <input
+            type="text"
+            value={linkField}
+            onChange={handleSearchVideo}
+            disabled={linkFieldDisabled ? 'disabled' : ''}
+            size={40}
+          />
           <button type="button" onClick={handleResetVideo}>Reset video</button>
         </div>
       </SearchContainer>
@@ -132,7 +146,7 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       )}
       {isSubmitted && (
         <div>
-          <h3>Title</h3>
+          <h4>Question</h4>
           <input type="text" value={entryTitle} onChange={({ target }) => handleEntryTitleChange(target.value)} />
           <VideoSpecs
             videoId={videoId}
@@ -145,13 +159,13 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
             }}
             dispatch={dispatch}
           />
-          <QuizAnswersContainer id={videoData ? videoData.id : null} />
+          <QuizAnswersContainer answers={answers} dispatch={dispatch} />
           <div>
             <button type="button" onClick={handleSubmit}>Submit</button>
           </div>
         </div>
       )}
-    </div>
+    </MainContainer>
   )
 }
 
