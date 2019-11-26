@@ -20,6 +20,20 @@ const MainContainer = styled.div`
   flex-direction: column
 `
 
+const QuestionContainer = styled.div`
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding-bottom: 1em
+`
+
+const QuestionInput = styled.input`
+  font-size: 20px
+  padding: 0.5em
+  width: 100%
+  text-align: center
+`
+
 const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoData }) => {
   const [linkField, setLinkField] = useState(videoData ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
   const [linkFieldDisabled, setLinkFieldDisabled] = useState(!!videoData)
@@ -146,8 +160,14 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       )}
       {isSubmitted && (
         <div>
-          <h4>Question</h4>
-          <input type="text" value={entryTitle} onChange={({ target }) => handleEntryTitleChange(target.value)} />
+          <QuestionContainer>
+            <h4>Question</h4>
+            <QuestionInput
+              type="text"
+              value={entryTitle}
+              onChange={({ target }) => handleEntryTitleChange(target.value)}
+            />
+          </QuestionContainer>
           <VideoSpecs
             videoId={videoId}
             playerOptions={playerOptions}

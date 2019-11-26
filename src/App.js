@@ -1,11 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from 'react-router-dom'
+import './App.css'
 import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import asyncLoad from 'react-async-loader'
-import AddVideoView from './components/AddQuizEntry/AddVideoView';
-import QuizEntryList from './components/QuizEntryList';
+import styled from 'styled-components'
+import AddVideoView from './components/AddQuizEntry/AddVideoView'
+import QuizEntryList from './components/QuizEntryList'
 
 const modalStyles = {
   content: {
@@ -16,8 +23,15 @@ const modalStyles = {
   },
 }
 
+const AddVideoModalContainer = styled.div`
+  background-color: #ffffcc
+`
+
+const AppContainer = styled.div`
+  background-color: #ffffcc
+`
+
 function App({ gapi, videoList }) {
-  console.log(videoList)
   const [isModalOpen, setModalOpen] = useState(false)
   const [apiLoaded, setApiLoaded] = useState(false)
   const [videoData, setVideoData] = useState(null)
@@ -61,27 +75,56 @@ function App({ gapi, videoList }) {
   }
 
   return (
-    <div className="App" id="root">
-      <h1>
-        WeebWiz
-      </h1>
-      <div className="content">
-        <button type="button" onClick={() => setModalOpen(true)}>Add a video</button>
-        <Modal
-          isOpen={isModalOpen}
-          onRequestClose={handleModalClose}
-          style={modalStyles}
-        >
-          <button type="button" onClick={handleModalClose}>Close modal</button>
-          <AddVideoView
-            setModalOpen={setModalOpen}
-            videoData={videoData}
-            setVideoData={setVideoData}
-          />
-        </Modal>
-        <QuizEntryList onClickEntry={onClickEntry} />
-      </div>
-    </div>
+    <AppContainer id="root">
+      <Router>
+        <div>
+          <nav>
+            <h1>
+              WeebWiz
+            </h1>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/creator">Creator</Link>
+              </li>
+            </ul>
+          </nav>
+          <Switch>
+            <Route path="/creator">
+              <QuizEntryList onClickEntry={onClickEntry} />
+              <AddVideoView
+                setModalOpen={setModalOpen}
+                videoData={videoData}
+                setVideoData={setVideoData}
+              />
+            </Route>
+            <Route path="/">
+              xd
+            </Route>
+          </Switch>
+          <div className="content">
+            <button type="button" onClick={() => setModalOpen(true)}>Add a video</button>
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={handleModalClose}
+              style={modalStyles}
+            >
+              <AddVideoModalContainer>
+                <button type="button" onClick={handleModalClose}>Close modal</button>
+                <AddVideoView
+                  setModalOpen={setModalOpen}
+                  videoData={videoData}
+                  setVideoData={setVideoData}
+                />
+              </AddVideoModalContainer>
+            </Modal>
+          </div>
+        </div>
+      </Router>
+
+    </AppContainer>
   );
 }
 

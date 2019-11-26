@@ -5,16 +5,26 @@ import VideoLengthSlider from './VideoLengthSlider'
 
 const TimerContainer = styled.div`
   display: flex
-  flex-direction: row
+  flex-direction: column
 `
 
 const NumberInput = styled.input`
   width: 60px
 `
 
+const TimerText = styled.div`
+  align-self: stretch
+`
+
+const TimerSliderUIContainer = styled.div`
+  display: flex
+  flex-direction: row
+`
+
 const Container = styled.div`
   display: flex
-  justify-content: center
+  align-items: center
+  flex-direction: column
 `
 
 const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
@@ -41,41 +51,46 @@ const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
 
   return (
     <Container>
-      <div>
-        Start time:
-      </div>
+
       <TimerContainer>
-        <div>
+        <TimerText>
+          Start time:
+        </TimerText>
+        <TimerSliderUIContainer>
           <VideoLengthSlider
             max={videoMeta.max}
             value={runTime.start}
             setTime={({ target }) => handleRunTimeChangeStart(target.value)}
           />
-        </div>
 
-        <NumberInput
-          type="number"
-          value={runTime.start}
-          min={videoMeta.min}
-          max={runTime.end}
-          onChange={({ target }) => handleRunTimeChangeStart(target.value)}
-        />
+          <NumberInput
+            type="number"
+            value={runTime.start}
+            min={videoMeta.min}
+            max={runTime.end}
+            onChange={({ target }) => handleRunTimeChangeStart(target.value)}
+          />
+          <div>seconds</div>
+        </TimerSliderUIContainer>
       </TimerContainer>
 
-      <div>End time:</div>
       <TimerContainer>
-        <VideoLengthSlider
-          max={videoMeta.max}
-          value={runTime.end}
-          setTime={({ target }) => handleRunTimeChangeEnd(target.value)}
-        />
-        <NumberInput
-          type="number"
-          value={runTime.end}
-          min={runTime.start}
-          max={videoMeta.max}
-          onChange={({ target }) => handleRunTimeChangeEnd(target.value)}
-        />
+        <TimerText>End time:</TimerText>
+        <TimerSliderUIContainer>
+          <VideoLengthSlider
+            max={videoMeta.max}
+            value={runTime.end}
+            setTime={({ target }) => handleRunTimeChangeEnd(target.value)}
+          />
+          <NumberInput
+            type="number"
+            value={runTime.end}
+            min={runTime.start}
+            max={videoMeta.max}
+            onChange={({ target }) => handleRunTimeChangeEnd(target.value)}
+          />
+          <div>seconds</div>
+        </TimerSliderUIContainer>
       </TimerContainer>
     </Container>
   );

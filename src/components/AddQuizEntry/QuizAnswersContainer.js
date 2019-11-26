@@ -10,12 +10,10 @@ const AnswerColumn = styled.div`
 `
 
 const AnswerTable = styled.div`
-  border: 2px solid red
   display: flex
 `
 
 function QuizAnswersContainer({ answers, dispatch }) {
-
   const handleToggleAnswer = (pos) => {
     const answer = answers.find(answer => answer.pos === pos)
     dispatch({
@@ -29,6 +27,7 @@ function QuizAnswersContainer({ answers, dispatch }) {
         },
       ],
     })
+    console.log(answers)
   }
 
   const handleAnswerTextChange = (pos, text) => {
