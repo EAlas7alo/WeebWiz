@@ -13,6 +13,7 @@ import asyncLoad from 'react-async-loader'
 import styled from 'styled-components'
 import AddVideoView from './components/AddQuizEntry/AddVideoView'
 import QuizEntryList from './components/QuizEntryList'
+import Creator from './components/Creator/Creator'
 
 const modalStyles = {
   content: {
@@ -93,34 +94,12 @@ function App({ gapi, videoList }) {
           </nav>
           <Switch>
             <Route path="/creator">
-              <QuizEntryList onClickEntry={onClickEntry} />
-              <AddVideoView
-                setModalOpen={setModalOpen}
-                videoData={videoData}
-                setVideoData={setVideoData}
-              />
+              <Creator />
             </Route>
             <Route path="/">
               xd
             </Route>
           </Switch>
-          <div className="content">
-            <button type="button" onClick={() => setModalOpen(true)}>Add a video</button>
-            <Modal
-              isOpen={isModalOpen}
-              onRequestClose={handleModalClose}
-              style={modalStyles}
-            >
-              <AddVideoModalContainer>
-                <button type="button" onClick={handleModalClose}>Close modal</button>
-                <AddVideoView
-                  setModalOpen={setModalOpen}
-                  videoData={videoData}
-                  setVideoData={setVideoData}
-                />
-              </AddVideoModalContainer>
-            </Modal>
-          </div>
         </div>
       </Router>
 

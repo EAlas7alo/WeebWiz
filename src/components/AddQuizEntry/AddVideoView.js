@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import uuid from 'uuid/v4'
@@ -57,6 +57,13 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
   }, dispatch } = useEntry(videoData)
 
   useEffect(() => {
+    dispatch({
+      type: 'set_entry',
+      entry: videoData,
+    })
+  }, [videoData])
+
+  useEffect(() => {
     if (!linkFieldDisabled) {
       dispatch({
         type: 'add',
@@ -108,9 +115,8 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       } else {
         addVideo(newVideoEntry)
       }
-      setVideoData(null)
+      // setVideoData(null)
     }
-    setModalOpen(false)
   }
 
   const handleResetVideo = () => {

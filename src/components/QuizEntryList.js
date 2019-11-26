@@ -5,11 +5,11 @@ import styled from 'styled-components'
 import QuizEntry from './QuizEntry'
 
 const Container = styled.div`
-  border-color: black
-  border-width: 1px
+  border: 1px solid black
   text-align: left
   margin-left: 20px
   margin-top: 5px
+  width: 20%
 `
 
 const QuizEntryList = ({ videoList, onClickEntry }) => {

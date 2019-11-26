@@ -39,14 +39,19 @@ const entryReducer = (state = initialState, action) => {
         ...state,
         [action.field]: action.value,
       }
+    case 'set_entry':
+      return {
+        ...action.entry,
+      }
     default:
       return state
   }
 }
 
-function useEntry(entry) {
-  const initializedEntry = entry || initialState
+function useEntry(videoData) {
+  const initializedEntry = videoData || initialState
   const [state, dispatch] = useReducer(entryReducer, initializedEntry)
+
   console.log(state)
   return {
     state,

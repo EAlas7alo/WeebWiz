@@ -9,6 +9,7 @@ const EntryContainer = styled.div`
     border-color: gray
     border: 1px groove gray
   }
+
 `
 
 const QuizEntry = ({ entry, onClickEntry }) => {
