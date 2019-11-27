@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import QuizEntryList from '../QuizEntryList'
-import AddVideoView from '../AddQuizEntry/AddVideoView'
+import QuizEntryList from './QuizEntryList/QuizEntryList'
+import AddVideoView from './AddQuizEntry/AddVideoView'
 
 const CreatorContainer = styled.div`
   display: flex
   flex-direction: row
+
 `
 
 function Creator({ videoList }) {

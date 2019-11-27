@@ -3,12 +3,12 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import uuid from 'uuid/v4'
 import styled from 'styled-components'
-import { findVideosById } from '../../logic/youtubeApi'
-import parseYoutubeUrl from '../../logic/youtubeUrlParser'
-import { addVideo, editVideo } from '../../redux/videoEntryReducer'
+import { findVideosById } from '../../../logic/youtubeApi'
+import parseYoutubeUrl from '../../../logic/youtubeUrlParser'
+import { addVideo, editVideo } from '../../../redux/videoEntryReducer'
 import VideoSpecs from './VideoSpecs'
 import QuizAnswersContainer from './QuizAnswersContainer'
-import useEntry from '../hooks/useEntry'
+import useEntry from '../../hooks/useEntry'
 
 const SearchContainer = styled.div`
   
@@ -17,7 +17,9 @@ const SearchContainer = styled.div`
 const MainContainer = styled.div`
   display: flex
   align-items: center
+  justify-content: center
   flex-direction: column
+  margin-right: auto
 `
 
 const QuestionContainer = styled.div`
@@ -28,10 +30,17 @@ const QuestionContainer = styled.div`
 `
 
 const QuestionInput = styled.input`
-  font-size: 20px
+  font-size: 35px
   padding: 0.5em
-  width: 100%
+  width: fit-content
   text-align: center
+  
+`
+
+const VideoContainer = styled.div`
+  display: flex
+  flex-direction: column
+  align-items: center
 `
 
 const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoData }) => {
@@ -166,25 +175,28 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       )}
       {isSubmitted && (
         <div>
-          <QuestionContainer>
-            <h4>Question</h4>
-            <QuestionInput
-              type="text"
-              value={entryTitle}
-              onChange={({ target }) => handleEntryTitleChange(target.value)}
+          <VideoContainer>
+            <QuestionContainer>
+              <h4>Question</h4>
+              <QuestionInput
+                type="text"
+                value={entryTitle}
+                size={50}
+                onChange={({ target }) => handleEntryTitleChange(target.value)}
+              />
+            </QuestionContainer>
+            <VideoSpecs
+              videoId={videoId}
+              playerOptions={playerOptions}
+              onReady={onReady}
+              videoMeta={videoMeta}
+              runTime={{
+                start,
+                end,
+              }}
+              dispatch={dispatch}
             />
-          </QuestionContainer>
-          <VideoSpecs
-            videoId={videoId}
-            playerOptions={playerOptions}
-            onReady={onReady}
-            videoMeta={videoMeta}
-            runTime={{
-              start,
-              end,
-            }}
-            dispatch={dispatch}
-          />
+          </VideoContainer>
           <QuizAnswersContainer answers={answers} dispatch={dispatch} />
           <div>
             <button type="button" onClick={handleSubmit}>Submit</button>

@@ -3,13 +3,16 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import QuizEntry from './QuizEntry'
+import Button from '../../StyledComponents/Button'
 
 const Container = styled.div`
   border: 1px solid black
   text-align: left
   margin-left: 20px
   margin-top: 5px
-  width: 20%
+  flex-wrap: wrap
+  display: flex
+  flex-direction: column
 `
 
 const QuizEntryList = ({ videoList, onClickEntry }) => {
@@ -18,6 +21,7 @@ const QuizEntryList = ({ videoList, onClickEntry }) => {
       {videoList.map(entry => (
         <QuizEntry entry={entry} key={entry.id} onClickEntry={onClickEntry} />
       ))}
+      <Button>Add a new entry</Button>
     </Container>
   );
 };

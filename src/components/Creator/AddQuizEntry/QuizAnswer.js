@@ -9,7 +9,7 @@ const Answer = styled.div`
   justify-content: center
   border-radius: 5px
   display: flex
-  background: yellow
+  background: snow
 
 `
 
@@ -17,9 +17,9 @@ const AnswerInput = styled.input`
   padding: 2px 2px 2px 2px
   border: 0px hidden
   -webkit-appearance: none
-  background: yellow
+  background: snow
   flex: 1
-  font-size: 15px
+  font-size: 28px
   &:focus {
     outline: none
   }

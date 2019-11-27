@@ -4,38 +4,29 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
 } from 'react-router-dom'
 import './App.css'
 import Modal from 'react-modal'
 import { connect } from 'react-redux'
 import asyncLoad from 'react-async-loader'
-import styled from 'styled-components'
-import AddVideoView from './components/AddQuizEntry/AddVideoView'
-import QuizEntryList from './components/QuizEntryList'
+import styled, { createGlobalStyle } from 'styled-components'
 import Creator from './components/Creator/Creator'
 
-const modalStyles = {
-  content: {
-    top: '5%',
-    left: '25%',
-    right: '25%',
-    bottom: 'auto',
-  },
-}
-
-const AddVideoModalContainer = styled.div`
-  background-color: #ffffcc
-`
-
 const AppContainer = styled.div`
-  background-color: #ffffcc
+  background-color: rgb(255, 255, 255);
 `
 
-function App({ gapi, videoList }) {
-  const [isModalOpen, setModalOpen] = useState(false)
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: rgb(255, 255, 255)
+    font: 'Montserrat'
+  }
+
+`
+
+function App({ gapi }) {
   const [apiLoaded, setApiLoaded] = useState(false)
-  const [videoData, setVideoData] = useState(null)
   Modal.setAppElement('#root')
 
   useEffect(() => {
@@ -62,21 +53,9 @@ function App({ gapi, videoList }) {
     }) */
   }
 
-  const onClickEntry = (id) => {
-    const clickedEntry = videoList.filter(video => video.id === id)
-    if (!isModalOpen) {
-      setVideoData(clickedEntry[0])
-      setModalOpen(true)
-    }
-  }
-
-  const handleModalClose = () => {
-    setVideoData(null)
-    setModalOpen(false)
-  }
-
   return (
     <AppContainer id="root">
+      <GlobalStyle />
       <Router>
         <div>
           <nav>
@@ -132,7 +111,6 @@ App.propTypes = {
     }),
     load: PropTypes.func.isRequired,
   }),
-  videoList: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 const asyncApp = asyncLoad(mapScriptsToProps)(App)

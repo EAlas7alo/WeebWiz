@@ -11,6 +11,7 @@ const AnswerColumn = styled.div`
 
 const AnswerTable = styled.div`
   display: flex
+  margin-left: 2em
 `
 
 function QuizAnswersContainer({ answers, dispatch }) {

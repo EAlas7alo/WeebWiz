@@ -10,6 +10,7 @@ const initialState = {
       start: 10,
       end: 20,
       thumbnail: 'https://i.ytimg.com/vi/H09e11JJwFk/default.jpg',
+      hideVideo: true,
       answers: [
         {
           pos: 1,
@@ -41,6 +42,7 @@ const initialState = {
       start: 0,
       end: 30,
       thumbnail: 'https://i.ytimg.com/vi/tha07Sasx60/default.jpg',
+      hideVideo: false,
       answers: [
         {
           pos: 1,
