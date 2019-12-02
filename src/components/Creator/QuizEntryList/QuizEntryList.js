@@ -15,13 +15,14 @@ const Container = styled.div`
   flex-direction: column
 `
 
-const QuizEntryList = ({ videoList, onClickEntry }) => {
+const QuizEntryList = ({ videoList, onClickEntry, onClickNewEntry }) => {
+
   return (
     <Container>
       {videoList.map(entry => (
         <QuizEntry entry={entry} key={entry.id} onClickEntry={onClickEntry} />
       ))}
-      <Button>Add a new entry</Button>
+      <Button onChange={onClickNewEntry}>Add a new entry</Button>
     </Container>
   );
 };
@@ -39,6 +40,7 @@ QuizEntryList.propTypes = {
     end: PropTypes.number.isRequired,
   })).isRequired,
   onClickEntry: PropTypes.func.isRequired,
+  onClickNewEntry: PropTypes.func.isRequired,
 }
 
 export default connect(mapStateToProps)(QuizEntryList)

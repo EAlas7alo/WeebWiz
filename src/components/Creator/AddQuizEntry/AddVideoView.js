@@ -43,10 +43,10 @@ const VideoContainer = styled.div`
   align-items: center
 `
 
-const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoData }) => {
+const AddVideoView = ({ addVideo, editVideo, videoData }) => {
   const [linkField, setLinkField] = useState(videoData ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
-  const [linkFieldDisabled, setLinkFieldDisabled] = useState(!!videoData)
-  const [isSubmitted, setIsSubmitted] = useState(!!videoData)
+  const [linkFieldDisabled, setLinkFieldDisabled] = useState(!!videoData && videoData.videoId !== '')
+  const [isSubmitted, setIsSubmitted] = useState(!!videoData && videoData.videoId !== '')
   const [videoMeta, setVideoMeta] = useState({ min: 0, max: 0 })
   const [showError, setShowError] = useState(false)
   const [playerOptions, setPlayerOptions] = useState({
@@ -70,6 +70,9 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       type: 'set_entry',
       entry: videoData,
     })
+    setIsSubmitted(videoData.videoId !== '')
+    setLinkFieldDisabled(false)
+    setLinkField(videoData.videoId !== '' ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
   }, [videoData])
 
   useEffect(() => {
@@ -99,6 +102,7 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       event.preventDefault()
       setIsSubmitted(true)
     }
+    setLinkFieldDisabled(true)
   }
 
   const onReady = (event) => {
@@ -124,14 +128,25 @@ const AddVideoView = ({ addVideo, editVideo, setModalOpen, videoData, setVideoDa
       } else {
         addVideo(newVideoEntry)
       }
-      // setVideoData(null)
     }
+    setIsSubmitted(false)
   }
 
   const handleResetVideo = () => {
     setIsSubmitted(false)
     setLinkField('')
     setLinkFieldDisabled(false)
+    setVideoMeta({ min: 0, max: 0 })
+    dispatch({
+      type: 'add',
+      field: 'start',
+      value: 0,
+    })
+    dispatch({
+      type: 'add',
+      field: 'end',
+      value: 0,
+    })
   }
 
   const handleEntryTitleChange = (value) => {

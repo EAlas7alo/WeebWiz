@@ -35,7 +35,7 @@ const ButtonContents = styled.div`
 function Button({ className, onChange, children }) {
   return (
     <ButtonContents>
-      <StyledButton className={className} type="button" onChange={onChange}>
+      <StyledButton className={className} type="button" onClick={onChange}>
         {children}
       </StyledButton>
     </ButtonContents>
