@@ -30,7 +30,11 @@ const initialState = {
   entryTitle: '',
   videoTitle: '',
   thumbnail: '',
-  hideoVideo: false,
+  hideVideo: false,
+  videoMeta: {
+    min: 0,
+    max: 0,
+  },
 }
 
 const entryReducer = (state = initialState, action) => {

@@ -32,6 +32,7 @@ const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
     })
   }
   console.log(runTime)
+  console.log(videoMeta)
   return (
     <Container>
       <TimeSetters

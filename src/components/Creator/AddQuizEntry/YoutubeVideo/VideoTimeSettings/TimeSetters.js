@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import VideoLengthSlider from './VideoLengthSlider'
@@ -33,7 +33,6 @@ function TimeSetters({
   timerText,
 }) {
   const [currentValue, setCurrentValue] = useState(initialValue)
-
   const handleLocalChange = (event) => {
     if (sliderMax === videoMeta.max) {
       setCurrentValue(Math.max(Math.min(sliderMax, event.target.value), sliderMin))
@@ -41,6 +40,10 @@ function TimeSetters({
       setCurrentValue(Math.min(sliderMax, event.target.value))
     }
   }
+
+  useEffect(() => {
+    setCurrentValue(initialValue)
+  }, [videoMeta])
   return (
     <TimerContainer>
       <TimerText>{timerText}</TimerText>

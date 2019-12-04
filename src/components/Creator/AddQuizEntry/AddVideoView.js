@@ -47,7 +47,6 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
   const [linkField, setLinkField] = useState(videoData ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
   const [linkFieldDisabled, setLinkFieldDisabled] = useState(!!videoData && videoData.videoId !== '')
   const [isSubmitted, setIsSubmitted] = useState(!!videoData && videoData.videoId !== '')
-  const [videoMeta, setVideoMeta] = useState({ min: 0, max: 0 })
   const [showError, setShowError] = useState(false)
   const [playerOptions, setPlayerOptions] = useState({
     height: '390',
@@ -63,6 +62,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
     entryTitle,
     start,
     end,
+    videoMeta,
   }, dispatch } = useEntry(videoData)
 
   useEffect(() => {
@@ -71,7 +71,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
       entry: videoData,
     })
     setIsSubmitted(videoData.videoId !== '')
-    setLinkFieldDisabled(false)
+    setLinkFieldDisabled(videoData.videoId !== '')
     setLinkField(videoData.videoId !== '' ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
   }, [videoData])
 
@@ -97,6 +97,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
         end,
         thumbnail: items[0].snippet.thumbnails.default.url,
         answers,
+        videoMeta,
       }
       if (videoData) {
         editVideo(newVideoEntry)
@@ -104,7 +105,6 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
         addVideo(newVideoEntry)
       }
     }
-    setIsSubmitted(false)
   }
 
   const handleSearchVideo = (event) => {
@@ -123,20 +123,32 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
       })
       handleInitialSubmit()
       setIsSubmitted(true)
+      setLinkFieldDisabled(true)
     }
-    setLinkFieldDisabled(true)
   }
 
   const onReady = (event) => {
-    setVideoMeta({ min: 0, max: event.target.getDuration() })
-    // event.target.seekTo(startTime, true)
+    dispatch({
+      type: 'add',
+      field: 'videoMeta',
+      value: {
+        min: 0,
+        max: event.target.getDuration(),
+      },
+    })
   }
 
   const handleResetVideo = () => {
     setIsSubmitted(false)
     setLinkField('')
     setLinkFieldDisabled(false)
-    setVideoMeta({ min: 0, max: 0 })
+    dispatch({
+      field: 'videoMeta',
+      value: {
+        min: 0,
+        max: 0,
+      },
+    })
     dispatch({
       type: 'add',
       field: 'start',
@@ -247,8 +259,6 @@ AddVideoView.defaultProps = {
 AddVideoView.propTypes = {
   addVideo: PropTypes.func.isRequired,
   editVideo: PropTypes.func.isRequired,
-  setVideoData: PropTypes.func.isRequired,
-  setModalOpen: PropTypes.func.isRequired,
   videoData: PropTypes.shape({
     id: PropTypes.string.isRequired,
     start: PropTypes.number.isRequired,

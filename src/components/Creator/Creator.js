@@ -32,6 +32,10 @@ function Creator({ videoList, addVideo }) {
       start: 0,
       end: 0,
       thumbnail: defualtthumbnail,
+      videoMeta: {
+        min: 0,
+        max: 0,
+      },
       answers: [
         {
           pos: 1,

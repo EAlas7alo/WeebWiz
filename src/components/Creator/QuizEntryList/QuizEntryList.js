@@ -16,7 +16,6 @@ const Container = styled.div`
 `
 
 const QuizEntryList = ({ videoList, onClickEntry, onClickNewEntry }) => {
-
   return (
     <Container>
       {videoList.map(entry => (

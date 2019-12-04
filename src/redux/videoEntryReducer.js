@@ -11,6 +11,10 @@ const initialState = {
       end: 20,
       thumbnail: 'https://i.ytimg.com/vi/H09e11JJwFk/default.jpg',
       hideVideo: true,
+      videoMeta: {
+        min: 0,
+        max: 2944,
+      },
       answers: [
         {
           pos: 1,
@@ -43,6 +47,10 @@ const initialState = {
       end: 30,
       thumbnail: 'https://i.ytimg.com/vi/tha07Sasx60/default.jpg',
       hideVideo: false,
+      videoMeta: {
+        min: 0,
+        max: 86,
+      },
       answers: [
         {
           pos: 1,
