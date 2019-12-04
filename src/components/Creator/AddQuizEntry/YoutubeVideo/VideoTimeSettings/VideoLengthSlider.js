@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 
@@ -23,23 +23,33 @@ const TimeSlider = styled.input`
   }
 `
 
-const VideoLengthSlider = ({ min, max, value, setTime }) => {
+const VideoLengthSlider = ({ value, setTime, videoMeta, handleLocalChange }) => {
+  const updateStoreValue = () => {
+    setTime(value)
+  }
+
   return (
     <div>
-      <TimeSlider type="range" min={min} max={max} value={value} onChange={setTime} />
+      <TimeSlider
+        type="range"
+        max={videoMeta.max}
+        value={value}
+        onChange={handleLocalChange}
+        onMouseUp={updateStoreValue}
+      />
     </div>
   )
 }
 
-VideoLengthSlider.defaultProps = {
-  min: 0,
-}
 
 VideoLengthSlider.propTypes = {
-  min: PropTypes.number,
-  max: PropTypes.number.isRequired,
   setTime: PropTypes.func.isRequired,
   value: PropTypes.number.isRequired,
+  videoMeta: PropTypes.shape({
+    min: PropTypes.number.isRequired,
+    max: PropTypes.number.isRequired,
+  }).isRequired,
+  handleLocalChange: PropTypes.func.isRequired,
 }
 
 export default VideoLengthSlider

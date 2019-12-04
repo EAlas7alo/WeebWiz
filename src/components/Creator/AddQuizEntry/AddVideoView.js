@@ -6,12 +6,12 @@ import styled from 'styled-components'
 import { findVideosById } from '../../../logic/youtubeApi'
 import parseYoutubeUrl from '../../../logic/youtubeUrlParser'
 import { addVideo, editVideo } from '../../../redux/videoEntryReducer'
-import VideoSpecs from './VideoSpecs'
+import VideoSpecs from './YoutubeVideo/VideoSpecs'
 import QuizAnswersContainer from './QuizAnswersContainer'
 import useEntry from '../../hooks/useEntry'
 
 const SearchContainer = styled.div`
-  
+  margin-left: ${props => props.isSubmitted}
 `
 
 const MainContainer = styled.div`
@@ -85,32 +85,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
     }
   }, [linkField])
 
-  const handleSearchVideo = (event) => {
-    setIsSubmitted(false)
-    setLinkField(event.target.value)
-    const id = parseYoutubeUrl(event.target.value)
-    if (id === null) {
-      event.preventDefault()
-      setShowError(true)
-    } else {
-      setShowError(false)
-      dispatch({
-        type: 'add',
-        field: 'videoId',
-        value: id,
-      })
-      event.preventDefault()
-      setIsSubmitted(true)
-    }
-    setLinkFieldDisabled(true)
-  }
-
-  const onReady = (event) => {
-    setVideoMeta({ min: 0, max: event.target.getDuration() })
-    // event.target.seekTo(startTime, true)
-  }
-
-  const handleSubmit = async () => {
+  const handleInitialSubmit = async () => {
     if (isSubmitted) {
       const { result: { items } } = await findVideosById([videoId])
       const newVideoEntry = {
@@ -130,6 +105,31 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
       }
     }
     setIsSubmitted(false)
+  }
+
+  const handleSearchVideo = (event) => {
+    setIsSubmitted(false)
+    setLinkField(event.target.value)
+    const id = parseYoutubeUrl(event.target.value)
+    event.preventDefault()
+    if (id === null) {
+      setShowError(true)
+    } else {
+      setShowError(false)
+      dispatch({
+        type: 'add',
+        field: 'videoId',
+        value: id,
+      })
+      handleInitialSubmit()
+      setIsSubmitted(true)
+    }
+    setLinkFieldDisabled(true)
+  }
+
+  const onReady = (event) => {
+    setVideoMeta({ min: 0, max: event.target.getDuration() })
+    // event.target.seekTo(startTime, true)
   }
 
   const handleResetVideo = () => {
@@ -170,7 +170,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
 
   return (
     <MainContainer>
-      <SearchContainer>
+      <SearchContainer isSubmitted={isSubmitted ? '' : '25em'}>
         <div>Paste your Youtube link</div>
         <div>
           <input
@@ -182,12 +182,12 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
           />
           <button type="button" onClick={handleResetVideo}>Reset video</button>
         </div>
+        {showError && (
+          <div>
+            There was an error with your YouTube link.
+          </div>
+        )}
       </SearchContainer>
-      {showError && (
-        <div>
-          There was an error with your YouTube link.
-        </div>
-      )}
       {isSubmitted && (
         <div>
           <VideoContainer>
@@ -214,7 +214,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
           </VideoContainer>
           <QuizAnswersContainer answers={answers} dispatch={dispatch} />
           <div>
-            <button type="button" onClick={handleSubmit}>Submit</button>
+            <button type="button" onClick={handleInitialSubmit}>Submit</button>
           </div>
         </div>
       )}

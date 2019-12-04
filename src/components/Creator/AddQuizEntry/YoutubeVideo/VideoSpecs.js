@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import Youtube from 'react-youtube'
-import VideoLengthSliderContainer from './VideoLengthSliderContainer'
+import VideoLengthSliderContainer from './VideoTimeSettings/VideoLengthSliderContainer'
 
 function VideoSpecs({ videoId, playerOptions, onReady, videoMeta, runTime, dispatch }) {
   return (
