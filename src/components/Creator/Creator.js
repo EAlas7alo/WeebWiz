@@ -6,7 +6,7 @@ import uuid from 'uuid/v4'
 import defualtthumbnail from '../../graphics/defaultthumbnail.png'
 import QuizEntryList from './QuizEntryList/QuizEntryList'
 import AddVideoView from './AddQuizEntry/AddVideoView'
-import { addVideo } from '../../redux/videoEntryReducer'
+import { addVideo, setCurrentVideo } from '../../redux/videoEntryReducer'
 
 
 const CreatorContainer = styled.div`
@@ -15,11 +15,10 @@ const CreatorContainer = styled.div`
 
 `
 
-function Creator({ videoList, addVideo }) {
-  const [videoData, setVideoData] = useState(videoList[0])
+function Creator({ videoList, addVideo, setCurrentVideo }) {
   const onClickEntry = (id) => {
     const clickedEntry = videoList.find(video => video.id === id)
-    setVideoData(clickedEntry)
+    setCurrentVideo(id)
     console.log(clickedEntry)
   }
 
@@ -60,19 +59,15 @@ function Creator({ videoList, addVideo }) {
       ],
     }
     addVideo(newVideoEntry)
-    setVideoData(newVideoEntry)
+    setCurrentVideo(newVideoEntry.id)
     console.log('onClickNewENtry')
   }
 
-console.log(videoData)
 
   return (
     <CreatorContainer>
       <QuizEntryList onClickEntry={onClickEntry} onClickNewEntry={onClickNewEntry} />
-      <AddVideoView
-        videoData={videoData}
-        setVideoData={setVideoData}
-      />
+      <AddVideoView />
     </CreatorContainer>
   )
 }
@@ -87,6 +82,9 @@ const mapDispatchToProps = dispatch => {
     addVideo: video => {
       dispatch(addVideo(video))
     },
+    setCurrentVideo: id => {
+      dispatch(setCurrentVideo(id))
+    },
   }
 }
 
@@ -98,6 +96,7 @@ Creator.propTypes = {
     end: PropTypes.number.isRequired,
   })).isRequired,
   addVideo: PropTypes.func.isRequired,
+  setCurrentVideo: PropTypes.func.isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator)

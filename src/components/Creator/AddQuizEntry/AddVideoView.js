@@ -55,21 +55,17 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
       autoplay: 0,
     },
   })
-
-  const { state: {
+  console.log(videoData)
+  const {
     answers,
     videoId,
     entryTitle,
     start,
     end,
     videoMeta,
-  }, dispatch } = useEntry(videoData)
+  } = videoData
 
   useEffect(() => {
-    dispatch({
-      type: 'set_entry',
-      entry: videoData,
-    })
     setIsSubmitted(videoData.videoId !== '')
     setLinkFieldDisabled(videoData.videoId !== '')
     setLinkField(videoData.videoId !== '' ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
@@ -77,8 +73,8 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
 
   useEffect(() => {
     if (!linkFieldDisabled) {
-      dispatch({
-        type: 'add',
+      editVideo({
+        ...videoData,
         start: 0,
         end: 0,
       })
@@ -116,10 +112,9 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
       setShowError(true)
     } else {
       setShowError(false)
-      dispatch({
-        type: 'add',
-        field: 'videoId',
-        value: id,
+      editVideo({
+        ...videoData,
+        videoId: id,
       })
       handleInitialSubmit()
       setIsSubmitted(true)
@@ -128,13 +123,12 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
   }
 
   const onReady = (event) => {
-    dispatch({
-      type: 'add',
-      field: 'videoMeta',
-      value: {
+    editVideo({
+      ...videoData,
+      videoMeta: {
         min: 0,
         max: event.target.getDuration(),
-      },
+      }
     })
   }
 
@@ -142,30 +136,21 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
     setIsSubmitted(false)
     setLinkField('')
     setLinkFieldDisabled(false)
-    dispatch({
-      field: 'videoMeta',
-      value: {
+    editVideo({
+      ...videoData,
+      videoMeta: {
         min: 0,
         max: 0,
       },
-    })
-    dispatch({
-      type: 'add',
-      field: 'start',
-      value: 0,
-    })
-    dispatch({
-      type: 'add',
-      field: 'end',
-      value: 0,
+      start: 0,
+      end: 0,
     })
   }
 
   const handleEntryTitleChange = (value) => {
-    dispatch({
-      type: 'add',
-      field: 'entryTitle',
-      value,
+    editVideo({
+      ...videoData,
+      entryTitle: value,
     })
   }
 
@@ -216,15 +201,14 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
               videoId={videoId}
               playerOptions={playerOptions}
               onReady={onReady}
-              videoMeta={videoMeta}
+              videoData={videoData}
               runTime={{
                 start,
                 end,
               }}
-              dispatch={dispatch}
             />
           </VideoContainer>
-          <QuizAnswersContainer answers={answers} dispatch={dispatch} />
+          <QuizAnswersContainer answers={answers} />
           <div>
             <button type="button" onClick={handleInitialSubmit}>Submit</button>
           </div>
@@ -247,8 +231,9 @@ const mapDispatchToProps = dispatch => {
 
 const mapStateToProps = state => {
   return {
-    startTime: state.startTime,
-    endTime: state.endTime,
+    videoData: state.videoEntryReducer.videoList.find(
+      video => video.id === state.videoEntryReducer.currentVideoId,
+    ),
   }
 }
 
@@ -261,6 +246,11 @@ AddVideoView.propTypes = {
   editVideo: PropTypes.func.isRequired,
   videoData: PropTypes.shape({
     id: PropTypes.string.isRequired,
+    answers: PropTypes.arrayOf(PropTypes.object),
+    videoMeta: PropTypes.shape({
+      min: PropTypes.number.isRequired,
+      max: PropTypes.number.isRequired,
+    }).isRequired,
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
     videoId: PropTypes.string.isRequired,

@@ -1,4 +1,4 @@
-import { ADD_VIDEO, GET_VIDEOS, EDIT_VIDEO } from './actions'
+import { ADD_VIDEO, GET_VIDEOS, EDIT_VIDEO, SET_CURRENT_VIDEO } from './actions'
 
 const initialState = {
   videoList: [
@@ -75,6 +75,7 @@ const initialState = {
       ],
     },
   ],
+  currentVideoId: '1',
 }
 
 export default (state = initialState, action) => {
@@ -91,9 +92,7 @@ export default (state = initialState, action) => {
         ...state,
         videoList: [
           ...state.videoList.map(video => {
-            console.log(video)
             if (video.id === action.video.id) {
-              console.log('xd')
               return action.video
             }
             return video
@@ -102,6 +101,11 @@ export default (state = initialState, action) => {
       }
     case GET_VIDEOS:
       return state.videoList
+    case SET_CURRENT_VIDEO:
+      return {
+        ...state,
+        currentVideoId: action.id,
+      }
     default:
       console.log('defauklt')
       return state
@@ -122,4 +126,11 @@ const editVideo = (video) => {
   }
 }
 
-export { addVideo, editVideo }
+const setCurrentVideo = (id) => {
+  return {
+    type: SET_CURRENT_VIDEO,
+    id,
+  }
+}
+
+export { addVideo, editVideo, setCurrentVideo }

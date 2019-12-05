@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
+import { editVideo } from '../../../../../redux/videoEntryReducer'
 import TimeSetters from './TimeSetters'
 
 const Container = styled.div`
@@ -9,52 +11,51 @@ const Container = styled.div`
   flex-direction: column
 `
 
-const VideoLengthSliderContainer = ({ videoMeta, runTime, dispatch }) => {
+const VideoLengthSliderContainer = ({ videoData, runTime, dispatch, editVideo }) => {
   const handleRunTimeChangeStart = (value) => {
-    console.log()
-    dispatch({
-      type: 'add',
-      field: 'start',
-      value: Math.trunc(Math.min(value, runTime.end)),
+    editVideo({
+      ...videoData,
+      start: value,
     })
   }
 
   const handleRunTimeChangeEnd = (value) => {
-    dispatch({
-      type: 'add',
-      field: 'end',
-      value: Math.trunc(
-        Math.min(
-          Math.max(value, runTime.start),
-          videoMeta.max,
-        ),
-      ),
+    editVideo({
+      ...videoData,
+      end: value,
     })
   }
   console.log(runTime)
-  console.log(videoMeta)
   return (
     <Container>
       <TimeSetters
         sliderMax={runTime.end}
-        videoMeta={videoMeta}
+        videoMeta={videoData.videoMeta}
         initialValue={runTime.start}
         handleChange={handleRunTimeChangeStart}
         numberInputMax={runTime.end}
         timerText="Start time:"
       />
       <TimeSetters
-        sliderMax={videoMeta.max}
+        sliderMax={videoData.videoMeta.max}
         sliderMin={runTime.start}
-        videoMeta={videoMeta}
+        videoMeta={videoData.videoMeta}
         initialValue={runTime.end}
         handleChange={handleRunTimeChangeEnd}
-        numberInputMax={videoMeta.max}
+        numberInputMax={videoData.videoMeta.max}
         numberInputMin={runTime.start}
         timerText="End Time:"
       />
     </Container>
   );
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    editVideo: video => {
+      dispatch(editVideo(video))
+    },
+  }
 }
 
 VideoLengthSliderContainer.propTypes = {
@@ -69,4 +70,4 @@ VideoLengthSliderContainer.propTypes = {
   dispatch: PropTypes.func.isRequired,
 }
 
-export default VideoLengthSliderContainer
+export default connect(null, mapDispatchToProps)(VideoLengthSliderContainer)

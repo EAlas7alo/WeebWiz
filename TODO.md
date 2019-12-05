@@ -4,3 +4,4 @@ Thumbnails don't work
 Sidebar list contracts upon adding an entry  
 Linkfield is enabled in some cases such as changing an entry after submitting  
 Sliders don't update when changing entry  
+Sidebar button should lock to the bottom of the page

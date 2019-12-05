@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Youtube from 'react-youtube'
 import VideoLengthSliderContainer from './VideoTimeSettings/VideoLengthSliderContainer'
 
-function VideoSpecs({ videoId, playerOptions, onReady, videoMeta, runTime, dispatch }) {
+function VideoSpecs({ videoId, playerOptions, onReady, videoData, runTime, dispatch }) {
   return (
     <div>
       <Youtube
@@ -12,7 +12,7 @@ function VideoSpecs({ videoId, playerOptions, onReady, videoMeta, runTime, dispa
         onReady={onReady}
       />
       <VideoLengthSliderContainer
-        videoMeta={videoMeta}
+        videoData={videoData}
         runTime={runTime}
         dispatch={dispatch}
       />
