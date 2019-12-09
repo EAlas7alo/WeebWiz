@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "formik": "^2.0.4",
+    "iso8601-duration": "^1.2.0",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
     "react-async-loader": "^0.1.2",

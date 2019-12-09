@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { connect } from 'react-redux'
+import { editVideo } from '../../../redux/videoEntryReducer'
 import QuizAnswer from './QuizAnswer'
 
 const AnswerColumn = styled.div`
@@ -14,13 +16,13 @@ const AnswerTable = styled.div`
   margin-left: 2em
 `
 
-function QuizAnswersContainer({ answers, dispatch }) {
+function QuizAnswersContainer({ video, editVideo }) {
+  const { answers } = video
   const handleToggleAnswer = (pos) => {
     const answer = answers.find(answer => answer.pos === pos)
-    dispatch({
-      type: 'add',
-      field: 'answers',
-      value: [
+    editVideo({
+      ...video,
+      answers: [
         ...answers.filter(answer => answer.pos !== pos),
         {
           ...answer,
@@ -28,15 +30,13 @@ function QuizAnswersContainer({ answers, dispatch }) {
         },
       ],
     })
-    console.log(answers)
   }
 
   const handleAnswerTextChange = (pos, text) => {
     const answer = answers.find(answer => answer.pos === pos)
-    dispatch({
-      type: 'add',
-      field: 'answers',
-      value: [
+    editVideo({
+      ...video,
+      answers: [
         ...answers.filter(answer => answer.pos !== pos),
         {
           ...answer,
@@ -75,14 +75,25 @@ function QuizAnswersContainer({ answers, dispatch }) {
   )
 }
 
-QuizAnswersContainer.defaultProps = {
-  answers: null,
+const mapStateToProps = state => {
+  const { videoEntryReducer: { videoList, currentVideoId } } = state
+  const video = videoList.find(video => video.id === currentVideoId)
+  return { video }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    editVideo: video => {
+      dispatch(editVideo(video))
+    },
+  }
+}
+
 
 QuizAnswersContainer.propTypes = {
-  answers: PropTypes.arrayOf(PropTypes.object),
-  dispatch: PropTypes.func.isRequired,
+  video: PropTypes.objectOf(PropTypes.object).isRequired,
+  editVideo: PropTypes.func.isRequired,
 }
 
 
-export default QuizAnswersContainer
+export default connect(mapStateToProps, mapDispatchToProps)(QuizAnswersContainer)

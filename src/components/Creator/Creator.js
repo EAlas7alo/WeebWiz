@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
@@ -12,7 +12,6 @@ import { addVideo, setCurrentVideo } from '../../redux/videoEntryReducer'
 const CreatorContainer = styled.div`
   display: flex
   flex-direction: row
-
 `
 
 function Creator({ videoList, addVideo, setCurrentVideo }) {

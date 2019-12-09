@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import uuid from 'uuid/v4'
+import { toSeconds, parse } from 'iso8601-duration';
 import styled from 'styled-components'
+import defaultthumbnail from '../../../graphics/defaultthumbnail.png'
 import { findVideosById } from '../../../logic/youtubeApi'
 import parseYoutubeUrl from '../../../logic/youtubeUrlParser'
 import { addVideo, editVideo } from '../../../redux/videoEntryReducer'
@@ -55,7 +57,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
       autoplay: 0,
     },
   })
-  console.log(videoData)
+
   const {
     answers,
     videoId,
@@ -81,30 +83,27 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
     }
   }, [linkField])
 
-  const handleInitialSubmit = async () => {
-    if (isSubmitted) {
-      const { result: { items } } = await findVideosById([videoId])
-      const newVideoEntry = {
-        entryTitle,
-        videoTitle: items[0].snippet.title,
-        id: videoData ? videoData.id : uuid(),
-        videoId,
-        start,
-        end,
-        thumbnail: items[0].snippet.thumbnails.default.url,
-        answers,
-        videoMeta,
-      }
-      if (videoData) {
-        editVideo(newVideoEntry)
-      } else {
-        addVideo(newVideoEntry)
-      }
+  const handleInitialSubmit = async (id) => {
+    const { result: { items } } = await findVideosById([id])
+    const newVideoEntry = {
+      entryTitle,
+      videoTitle: items[0].snippet.title,
+      id: videoData ? videoData.id : uuid(),
+      videoId: id,
+      start,
+      end,
+      thumbnail: items[0].snippet.thumbnails.default.url,
+      answers,
+      videoMeta: {
+        min: 0,
+        max: toSeconds(parse(items[0].contentDetails.duration)),
+      },
     }
+    editVideo(newVideoEntry)
   }
 
   const handleSearchVideo = (event) => {
-    setIsSubmitted(false)
+    //setIsSubmitted(false)
     setLinkField(event.target.value)
     const id = parseYoutubeUrl(event.target.value)
     event.preventDefault()
@@ -112,38 +111,26 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
       setShowError(true)
     } else {
       setShowError(false)
-      editVideo({
-        ...videoData,
-        videoId: id,
-      })
-      handleInitialSubmit()
+      handleInitialSubmit(id)
       setIsSubmitted(true)
       setLinkFieldDisabled(true)
     }
   }
 
-  const onReady = (event) => {
-    editVideo({
-      ...videoData,
-      videoMeta: {
-        min: 0,
-        max: event.target.getDuration(),
-      }
-    })
-  }
-
   const handleResetVideo = () => {
-    setIsSubmitted(false)
-    setLinkField('')
-    setLinkFieldDisabled(false)
+    // setIsSubmitted(false)
+    // setLinkField('')
+    // setLinkFieldDisabled(false)
     editVideo({
       ...videoData,
       videoMeta: {
         min: 0,
         max: 0,
       },
+      videoId: '',
       start: 0,
       end: 0,
+      thumbnail: defaultthumbnail,
     })
   }
 
@@ -167,7 +154,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
 
   return (
     <MainContainer>
-      <SearchContainer isSubmitted={isSubmitted ? '' : '25em'}>
+      <SearchContainer isSubmitted={isSubmitted ? '' : ''}>
         <div>Paste your Youtube link</div>
         <div>
           <input
@@ -185,18 +172,18 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
           </div>
         )}
       </SearchContainer>
-      {isSubmitted && (
-        <div>
-          <VideoContainer>
-            <QuestionContainer>
-              <h4>Question</h4>
-              <QuestionInput
-                type="text"
-                value={entryTitle}
-                size={50}
-                onChange={({ target }) => handleEntryTitleChange(target.value)}
-              />
-            </QuestionContainer>
+      <div>
+        <VideoContainer>
+          <QuestionContainer>
+            <h4>Question</h4>
+            <QuestionInput
+              type="text"
+              value={entryTitle}
+              size={50}
+              onChange={({ target }) => handleEntryTitleChange(target.value)}
+            />
+          </QuestionContainer>
+          {true && (
             <VideoSpecs
               videoId={videoId}
               playerOptions={playerOptions}
@@ -207,13 +194,13 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
                 end,
               }}
             />
-          </VideoContainer>
-          <QuizAnswersContainer answers={answers} />
-          <div>
-            <button type="button" onClick={handleInitialSubmit}>Submit</button>
-          </div>
+          )}
+        </VideoContainer>
+        <QuizAnswersContainer answers={answers} />
+        <div>
+          <button type="button" onClick={handleInitialSubmit}>Submit</button>
         </div>
-      )}
+      </div>
     </MainContainer>
   )
 }
@@ -238,7 +225,9 @@ const mapStateToProps = state => {
 }
 
 AddVideoView.defaultProps = {
-  videoData: null,
+  videoData: {
+    
+  }
 }
 
 AddVideoView.propTypes = {
