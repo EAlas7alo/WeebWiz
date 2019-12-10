@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
@@ -13,18 +13,42 @@ const Container = styled.div`
   flex-wrap: wrap
   display: flex
   flex-direction: column
+  height: ${props => props.height}
+  width: 15rem
+`
+
+const ListContainer = styled.div`
+  overflow: auto
+  height: ${props => props.height}
+`
+
+const AddEntryButton = styled(Button)`
+  height: ${props => props.height}
 `
 
 const QuizEntryList = ({ videoList, onClickEntry, onClickNewEntry }) => {
+  const { innerHeight } = window
+
+  const dimensions = {
+    listContainer: `${innerHeight * 0.7}px`,
+  }
+
   return (
-    <Container>
-      {videoList.map(entry => (
-        <QuizEntry entry={entry} key={entry.id} onClickEntry={onClickEntry} />
-      ))}
-      <Button onChange={onClickNewEntry}>Add a new entry</Button>
+    <Container height={dimensions.container}>
+      <ListContainer height={dimensions.listContainer}>
+        {videoList.map(entry => (
+          <QuizEntry entry={entry} key={entry.id} onClickEntry={onClickEntry} />
+        ))}
+      </ListContainer>
+      <AddEntryButton
+        height={dimensions.button}
+        onChange={onClickNewEntry}
+      >
+        Add a new entry
+      </AddEntryButton>
     </Container>
-  );
-};
+  )
+}
 
 const mapStateToProps = state => {
   const { videoEntryReducer: { videoList } } = state

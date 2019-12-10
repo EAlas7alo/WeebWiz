@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import uuid from 'uuid/v4'
-import defualtthumbnail from '../../graphics/defaultthumbnail.png'
+import defaultThumbnail from '../../graphics/defaultthumbnail.png'
 import QuizEntryList from './QuizEntryList/QuizEntryList'
 import AddVideoView from './AddQuizEntry/AddVideoView'
 import { addVideo, setCurrentVideo } from '../../redux/videoEntryReducer'
@@ -12,6 +12,7 @@ import { addVideo, setCurrentVideo } from '../../redux/videoEntryReducer'
 const CreatorContainer = styled.div`
   display: flex
   flex-direction: row
+  height: 100%
 `
 
 function Creator({ videoList, addVideo, setCurrentVideo }) {
@@ -29,7 +30,7 @@ function Creator({ videoList, addVideo, setCurrentVideo }) {
       videoId: '',
       start: 0,
       end: 0,
-      thumbnail: defualtthumbnail,
+      thumbnail: defaultThumbnail,
       videoMeta: {
         min: 0,
         max: 0,
@@ -59,9 +60,7 @@ function Creator({ videoList, addVideo, setCurrentVideo }) {
     }
     addVideo(newVideoEntry)
     setCurrentVideo(newVideoEntry.id)
-    console.log('onClickNewENtry')
   }
-
 
   return (
     <CreatorContainer>

@@ -59,9 +59,6 @@ function App({ gapi }) {
       <Router>
         <div>
           <nav>
-            <h1>
-              WeebWiz
-            </h1>
             <ul>
               <li>
                 <Link to="/">Home</Link>

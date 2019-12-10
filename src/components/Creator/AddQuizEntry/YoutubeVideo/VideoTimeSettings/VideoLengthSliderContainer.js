@@ -11,7 +11,7 @@ const Container = styled.div`
   flex-direction: column
 `
 
-const VideoLengthSliderContainer = ({ videoData, runTime, dispatch, editVideo }) => {
+const VideoLengthSliderContainer = ({ videoData, runTime, editVideo }) => {
   const handleRunTimeChangeStart = (value) => {
     editVideo({
       ...videoData,
@@ -25,7 +25,7 @@ const VideoLengthSliderContainer = ({ videoData, runTime, dispatch, editVideo })
       end: value,
     })
   }
-  console.log(runTime)
+
   return (
     <Container>
       <TimeSetters
@@ -59,15 +59,17 @@ const mapDispatchToProps = dispatch => {
 }
 
 VideoLengthSliderContainer.propTypes = {
-  videoMeta: PropTypes.shape({
-    min: PropTypes.number,
-    max: PropTypes.number.isRequired,
+  videoData: PropTypes.shape({
+    videoMeta: PropTypes.shape({
+      min: PropTypes.number,
+      max: PropTypes.number.isRequired,
+    }).isRequired,
   }).isRequired,
   runTime: PropTypes.shape({
     start: PropTypes.number.isRequired,
     end: PropTypes.number.isRequired,
   }).isRequired,
-  dispatch: PropTypes.func.isRequired,
+  editVideo: PropTypes.func.isRequired,
 }
 
 export default connect(null, mapDispatchToProps)(VideoLengthSliderContainer)

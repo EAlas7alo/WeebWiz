@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import uuid from 'uuid/v4'
-import { toSeconds, parse } from 'iso8601-duration';
+import { toSeconds, parse } from 'iso8601-duration'
 import styled from 'styled-components'
-import defaultthumbnail from '../../../graphics/defaultthumbnail.png'
+import defaultThumbnail from '../../../graphics/defaultthumbnail.png'
 import { findVideosById } from '../../../logic/youtubeApi'
 import parseYoutubeUrl from '../../../logic/youtubeUrlParser'
 import { addVideo, editVideo } from '../../../redux/videoEntryReducer'
@@ -22,6 +22,7 @@ const MainContainer = styled.div`
   justify-content: center
   flex-direction: column
   margin-right: auto
+  height: 100%
 `
 
 const QuestionContainer = styled.div`
@@ -45,7 +46,7 @@ const VideoContainer = styled.div`
   align-items: center
 `
 
-const AddVideoView = ({ addVideo, editVideo, videoData }) => {
+const AddVideoView = ({ editVideo, videoData }) => {
   const [linkField, setLinkField] = useState(videoData ? `https://www.youtube.com/watch?v=${videoData.videoId}` : '')
   const [linkFieldDisabled, setLinkFieldDisabled] = useState(!!videoData && videoData.videoId !== '')
   const [isSubmitted, setIsSubmitted] = useState(!!videoData && videoData.videoId !== '')
@@ -130,7 +131,7 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
       videoId: '',
       start: 0,
       end: 0,
-      thumbnail: defaultthumbnail,
+      thumbnail: defaultThumbnail,
     })
   }
 
@@ -187,7 +188,6 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
             <VideoSpecs
               videoId={videoId}
               playerOptions={playerOptions}
-              onReady={onReady}
               videoData={videoData}
               runTime={{
                 start,
@@ -197,9 +197,6 @@ const AddVideoView = ({ addVideo, editVideo, videoData }) => {
           )}
         </VideoContainer>
         <QuizAnswersContainer answers={answers} />
-        <div>
-          <button type="button" onClick={handleInitialSubmit}>Submit</button>
-        </div>
       </div>
     </MainContainer>
   )
@@ -224,14 +221,7 @@ const mapStateToProps = state => {
   }
 }
 
-AddVideoView.defaultProps = {
-  videoData: {
-    
-  }
-}
-
 AddVideoView.propTypes = {
-  addVideo: PropTypes.func.isRequired,
   editVideo: PropTypes.func.isRequired,
   videoData: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -244,7 +234,7 @@ AddVideoView.propTypes = {
     end: PropTypes.number.isRequired,
     videoId: PropTypes.string.isRequired,
     entryTitle: PropTypes.string.isRequired,
-  }),
+  }).isRequired,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddVideoView)
