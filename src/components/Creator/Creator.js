@@ -11,8 +11,8 @@ import { addVideo, setCurrentVideo } from '../../redux/videoEntryReducer'
 
 const CreatorContainer = styled.div`
   display: flex
-  flex-direction: row
-  height: 100%
+  flex-flow: row
+  
 `
 
 function Creator({ videoList, addVideo, setCurrentVideo }) {
@@ -30,6 +30,7 @@ function Creator({ videoList, addVideo, setCurrentVideo }) {
       videoId: '',
       start: 0,
       end: 0,
+      hideVideo: false,
       thumbnail: defaultThumbnail,
       videoMeta: {
         min: 0,

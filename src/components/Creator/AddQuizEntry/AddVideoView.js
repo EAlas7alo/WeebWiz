@@ -18,11 +18,17 @@ const SearchContainer = styled.div`
 
 const MainContainer = styled.div`
   display: flex
+  flex : 1
+  width: 80%
+  flex-basis: 0
+  flex-grow: 1
+  flex-shrink: 1
+
   align-items: center
   justify-content: center
   flex-direction: column
   margin-right: auto
-  height: 100%
+  //height: 100%
 `
 
 const QuestionContainer = styled.div`
@@ -65,7 +71,6 @@ const AddVideoView = ({ editVideo, videoData }) => {
     entryTitle,
     start,
     end,
-    videoMeta,
   } = videoData
 
   useEffect(() => {
@@ -104,7 +109,7 @@ const AddVideoView = ({ editVideo, videoData }) => {
   }
 
   const handleSearchVideo = (event) => {
-    //setIsSubmitted(false)
+    // setIsSubmitted(false)
     setLinkField(event.target.value)
     const id = parseYoutubeUrl(event.target.value)
     event.preventDefault()
@@ -184,17 +189,15 @@ const AddVideoView = ({ editVideo, videoData }) => {
               onChange={({ target }) => handleEntryTitleChange(target.value)}
             />
           </QuestionContainer>
-          {true && (
-            <VideoSpecs
-              videoId={videoId}
-              playerOptions={playerOptions}
-              videoData={videoData}
-              runTime={{
-                start,
-                end,
-              }}
-            />
-          )}
+          <VideoSpecs
+            videoId={videoId}
+            playerOptions={playerOptions}
+            videoData={videoData}
+            runTime={{
+              start,
+              end,
+            }}
+          />
         </VideoContainer>
         <QuizAnswersContainer answers={answers} />
       </div>

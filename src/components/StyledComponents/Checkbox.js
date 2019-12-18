@@ -5,6 +5,9 @@ import styled from 'styled-components'
 const ButtonContainer = styled.div`
   display: inline-block;
   vertical-align: middle;
+  &:hover {
+    cursor: pointer
+  }
 `
 
 const CorrectCheckmark = styled.input.attrs({ type: 'checkbox' })`
@@ -29,14 +32,14 @@ const StyledCheckbox = styled.div`
   transition: background 175ms;
 `
 
-function Checkbox({ className, checked, ...props }) {
+function Checkbox({ className, checked, onChange, size, ...props }) {
   return (
     <ButtonContainer className={className}>
-      <CorrectCheckmark defaultChecked={checked} onChange={props.onChange} />
+      <CorrectCheckmark defaultChecked={checked} onChange={onChange} />
       <StyledCheckbox checked={checked}>
         <ion-icon
           name="checkmark"
-          size="large"
+          size={size}
         />
       </StyledCheckbox>
     </ButtonContainer>
@@ -45,12 +48,14 @@ function Checkbox({ className, checked, ...props }) {
 
 Checkbox.defaultProps = {
   className: '',
+  size: 'large',
 }
 
 Checkbox.propTypes = {
   checked: PropTypes.bool.isRequired,
   className: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  size: PropTypes.number,
 }
 
 export default Checkbox

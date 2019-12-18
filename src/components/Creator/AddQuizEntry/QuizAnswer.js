@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import Checkbox from './Checkbox'
+import Checkbox from '../../StyledComponents/Checkbox'
 
 const Answer = styled.div`
   padding-left: 5px
-  
   justify-content: center
   border-radius: 5px
   display: flex
   background: snow
-
+  min-width: 0
 `
 
 const AnswerInput = styled.input`
@@ -23,9 +22,12 @@ const AnswerInput = styled.input`
   &:focus {
     outline: none
   }
+  flex-basis: 100%
+  min-width: 0
+  
 `
 
-function QuizAnswer({ answer, onPressCorrect, onTextChange }) {
+function QuizAnswer({ answer, onPressCorrect, onTextChange, width, height }) {
   const [isFocused, setIsFocused] = useState(false)
 
   const handleCorrectChange = () => {
@@ -41,7 +43,12 @@ function QuizAnswer({ answer, onPressCorrect, onTextChange }) {
   }
 
   return (
-    <Answer pos={answer.pos} isFocused={isFocused}>
+    <Answer
+      pos={answer.pos}
+      isFocused={isFocused}
+      width={width}
+      height={height}
+    >
       <div>
         <AnswerInput
           type="text"
@@ -67,6 +74,8 @@ QuizAnswer.propTypes = {
   }).isRequired,
   onPressCorrect: PropTypes.func.isRequired,
   onTextChange: PropTypes.func.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 }
 
 export default QuizAnswer

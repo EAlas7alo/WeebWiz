@@ -12,6 +12,7 @@ import { connect } from 'react-redux'
 import asyncLoad from 'react-async-loader'
 import styled, { createGlobalStyle } from 'styled-components'
 import Creator from './components/Creator/Creator'
+import useWindowDimensions from './components/hooks/useWindowDimensions'
 
 const AppContainer = styled.div`
   background-color: rgb(255, 255, 255);
@@ -27,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
 
 function App({ gapi }) {
   const [apiLoaded, setApiLoaded] = useState(false)
+  const windowDimensions = useWindowDimensions()
   Modal.setAppElement('#root')
 
   useEffect(() => {
