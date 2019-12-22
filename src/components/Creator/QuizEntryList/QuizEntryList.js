@@ -10,20 +10,20 @@ const Container = styled.div`
   text-align: left
   margin-left: 20px
   margin-top: 5px
-  flex-wrap: wrap
   display: flex
   flex-direction: column
-  height: ${props => props.height}
-  width: 15rem
+  height: auto
+  flex: 0.2
 `
 
 const ListContainer = styled.div`
   overflow: auto
-  height: ${props => props.height}
+  flex: 1
+  
 `
 
 const AddEntryButton = styled(Button)`
-  height: ${props => props.height}
+  min-height: 40px
 `
 
 const QuizEntryList = ({ videoList, onClickEntry, onClickNewEntry }) => {

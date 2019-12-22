@@ -23,8 +23,15 @@ const GlobalStyle = createGlobalStyle`
     background-color: rgb(255, 255, 255)
     font: 'Montserrat'
   }
-
+  html {
+    font-size: calc(15px + 0.25vw)
+  }
 `
+
+const StyledCreator = styled(Creator)`
+  flex: 1
+`
+
 
 function App({ gapi }) {
   const [apiLoaded, setApiLoaded] = useState(false)
@@ -72,7 +79,7 @@ function App({ gapi }) {
           </nav>
           <Switch>
             <Route path="/creator">
-              <Creator />
+              <StyledCreator />
             </Route>
             <Route path="/">
               xd

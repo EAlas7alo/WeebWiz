@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
@@ -7,15 +7,18 @@ import defaultThumbnail from '../../graphics/defaultthumbnail.png'
 import QuizEntryList from './QuizEntryList/QuizEntryList'
 import AddVideoView from './AddQuizEntry/AddVideoView'
 import { addVideo, setCurrentVideo } from '../../redux/videoEntryReducer'
+import useWindowDimensions from '../hooks/useWindowDimensions'
 
 
 const CreatorContainer = styled.div`
   display: flex
-  flex-flow: row
-  
+  flex-direction: row
+  margin-left: 20px
 `
 
 function Creator({ videoList, addVideo, setCurrentVideo }) {
+  const dimensions = useWindowDimensions()
+
   const onClickEntry = (id) => {
     const clickedEntry = videoList.find(video => video.id === id)
     setCurrentVideo(id)

@@ -10,11 +10,13 @@ const NumberInput = styled.input`
 const TimerContainer = styled.div`
   display: flex
   flex-direction: column
+  margin-bottom: 5px
 `
 
 
 const TimerText = styled.div`
   align-self: stretch
+  font-size: calc(12px + 0.2vw)
 `
 
 const TimerSliderUIContainer = styled.div`
@@ -65,7 +67,6 @@ function TimeSetters({
           onChange={handleChange}
         />
       </TimerSliderUIContainer>
-      <div>seconds</div>
     </TimerContainer>
   )
 }

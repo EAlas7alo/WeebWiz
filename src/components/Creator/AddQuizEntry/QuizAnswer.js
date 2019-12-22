@@ -4,25 +4,29 @@ import styled from 'styled-components'
 import Checkbox from '../../StyledComponents/Checkbox'
 
 const Answer = styled.div`
-  padding-left: 5px
+  //padding-left: 5px
   justify-content: center
   border-radius: 5px
   display: flex
   background: snow
   min-width: 0
+  flex: 1
+  width: 100%
+  border: 1px solid red
+  
 `
 
 const AnswerInput = styled.input`
   padding: 2px 2px 2px 2px
   border: 0px hidden
   -webkit-appearance: none
+  width: 100%
   background: snow
-  flex: 1
-  font-size: 28px
+  flex-grow: 1
+  font-size: 20px
   &:focus {
     outline: none
   }
-  flex-basis: 100%
   min-width: 0
   
 `
@@ -49,16 +53,13 @@ function QuizAnswer({ answer, onPressCorrect, onTextChange, width, height }) {
       width={width}
       height={height}
     >
-      <div>
-        <AnswerInput
-          type="text"
-          value={answer.text}
-          size={40}
-          onChange={({ target }) => handleAnswerTextChange(target)}
-          onFocus={onFocusAnswerInput}
-          onBlur={onFocusAnswerInput}
-        />
-      </div>
+      <AnswerInput
+        type="text"
+        value={answer.text}
+        onChange={({ target }) => handleAnswerTextChange(target)}
+        onFocus={onFocusAnswerInput}
+        onBlur={onFocusAnswerInput}
+      />
       <label>
         <Checkbox checked={answer.correct} onChange={handleCorrectChange} />
       </label>

@@ -25,7 +25,6 @@ const SliderContainer = styled.div`
 `
 
 const HideVideoCheckBox = styled(Checkbox)`
-  font-size: 25
 `
 
 const VideoLengthSliderContainer = ({ videoData, runTime, editVideo }) => {

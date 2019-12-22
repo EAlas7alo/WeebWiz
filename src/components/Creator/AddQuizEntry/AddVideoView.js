@@ -10,7 +10,6 @@ import parseYoutubeUrl from '../../../logic/youtubeUrlParser'
 import { addVideo, editVideo } from '../../../redux/videoEntryReducer'
 import VideoSpecs from './YoutubeVideo/VideoSpecs'
 import QuizAnswersContainer from './QuizAnswersContainer'
-import useEntry from '../../hooks/useEntry'
 
 const SearchContainer = styled.div`
   margin-left: ${props => props.isSubmitted}
@@ -18,17 +17,14 @@ const SearchContainer = styled.div`
 
 const MainContainer = styled.div`
   display: flex
-  flex : 1
-  width: 80%
-  flex-basis: 0
-  flex-grow: 1
-  flex-shrink: 1
-
+  flex : 1 1 auto
+  width: 100%
   align-items: center
   justify-content: center
   flex-direction: column
-  margin-right: auto
-  //height: 100%
+  margin-right: 15px
+  margin-left: 15px
+  border: 1px solid red
 `
 
 const QuestionContainer = styled.div`
@@ -36,6 +32,7 @@ const QuestionContainer = styled.div`
   flex-direction: column
   align-items: center
   padding-bottom: 1em
+  width: 100%
 `
 
 const QuestionInput = styled.input`
@@ -43,13 +40,15 @@ const QuestionInput = styled.input`
   padding: 0.5em
   width: fit-content
   text-align: center
-  
+  width: 80%
+  flex: 1
 `
 
 const VideoContainer = styled.div`
   display: flex
   flex-direction: column
   align-items: center
+  width: 100%
 `
 
 const AddVideoView = ({ editVideo, videoData }) => {
@@ -178,29 +177,26 @@ const AddVideoView = ({ editVideo, videoData }) => {
           </div>
         )}
       </SearchContainer>
-      <div>
-        <VideoContainer>
-          <QuestionContainer>
-            <h4>Question</h4>
-            <QuestionInput
-              type="text"
-              value={entryTitle}
-              size={50}
-              onChange={({ target }) => handleEntryTitleChange(target.value)}
-            />
-          </QuestionContainer>
-          <VideoSpecs
-            videoId={videoId}
-            playerOptions={playerOptions}
-            videoData={videoData}
-            runTime={{
-              start,
-              end,
-            }}
+      <VideoContainer>
+        <QuestionContainer>
+          <QuestionInput
+            type="text"
+            placeholder="Type your question here"
+            value={entryTitle}
+            onChange={({ target }) => handleEntryTitleChange(target.value)}
           />
-        </VideoContainer>
-        <QuizAnswersContainer answers={answers} />
-      </div>
+        </QuestionContainer>
+        <VideoSpecs
+          videoId={videoId}
+          playerOptions={playerOptions}
+          videoData={videoData}
+          runTime={{
+            start,
+            end,
+          }}
+        />
+      </VideoContainer>
+      <QuizAnswersContainer answers={answers} />
     </MainContainer>
   )
 }
