@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import Youtube from 'react-youtube'
 import VideoLengthSliderContainer from './VideoTimeSettings/VideoLengthSliderContainer'
@@ -36,6 +36,13 @@ VideoSpecs.propTypes = {
     height: PropTypes.string.isRequired,
     width: PropTypes.string.isRequired,
   }),
+  videoData: PropTypes.shape({
+    videoMeta: PropTypes.shape({
+      min: PropTypes.number,
+      max: PropTypes.number.isRequired,
+    }).isRequired,
+    hideVideo: PropTypes.bool.isRequired,
+  }).isRequired,
   onReady: PropTypes.func.isRequired,
   videoMeta: PropTypes.shape({
     min: PropTypes.number.isRequired,

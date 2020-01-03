@@ -12,7 +12,6 @@ import { connect } from 'react-redux'
 import asyncLoad from 'react-async-loader'
 import styled, { createGlobalStyle } from 'styled-components'
 import Creator from './components/Creator/Creator'
-import useWindowDimensions from './components/hooks/useWindowDimensions'
 
 const AppContainer = styled.div`
   background-color: rgb(255, 255, 255);
@@ -35,7 +34,6 @@ const StyledCreator = styled(Creator)`
 
 function App({ gapi }) {
   const [apiLoaded, setApiLoaded] = useState(false)
-  const windowDimensions = useWindowDimensions()
   Modal.setAppElement('#root')
 
   useEffect(() => {
@@ -49,7 +47,7 @@ function App({ gapi }) {
       })
     }
     loadYoutube()
-  }, [])
+  }, [gapi])
 
   if (apiLoaded) {
     /* const videoIds = videoList.map(entry => entry.videoId)
@@ -75,6 +73,12 @@ function App({ gapi }) {
               <li>
                 <Link to="/creator">Creator</Link>
               </li>
+              <li>
+                <Link to="/host">Host a game</Link>
+              </li>
+              <li>
+                <Link to="/play">Join a game</Link>
+              </li>
             </ul>
           </nav>
           <Switch>
@@ -83,6 +87,12 @@ function App({ gapi }) {
             </Route>
             <Route path="/">
               xd
+            </Route>
+            <Route path="/host">
+
+            </Route>
+            <Route path="/play">
+
             </Route>
           </Switch>
         </div>

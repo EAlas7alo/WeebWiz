@@ -86,7 +86,7 @@ const AddVideoView = ({ editVideo, videoData }) => {
         end: 0,
       })
     }
-  }, [linkField])
+  }, [linkField, linkFieldDisabled, videoData, editVideo])
 
   const handleInitialSubmit = async (id) => {
     const { result: { items } } = await findVideosById([id])

@@ -45,7 +45,7 @@ function TimeSetters({
 
   useEffect(() => {
     setCurrentValue(initialValue)
-  }, [videoMeta])
+  }, [videoMeta, initialValue])
   return (
     <TimerContainer>
       <TimerText>{timerText}</TimerText>
