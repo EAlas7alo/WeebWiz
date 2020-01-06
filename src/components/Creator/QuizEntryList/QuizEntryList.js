@@ -51,8 +51,10 @@ const QuizEntryList = ({ videoList, onClickEntry, onClickNewEntry }) => {
 }
 
 const mapStateToProps = state => {
-  const { videoEntryReducer: { videoList } } = state
-  return { videoList }
+  const { videoEntryReducer: { quizList, currentQuizId } } = state
+  return {
+    videoList: quizList.find(quiz => quiz.id === currentQuizId).videoList,
+  }
 }
 
 QuizEntryList.propTypes = {

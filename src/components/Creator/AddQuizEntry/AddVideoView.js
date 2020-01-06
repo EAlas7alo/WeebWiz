@@ -213,9 +213,11 @@ const mapDispatchToProps = dispatch => {
 }
 
 const mapStateToProps = state => {
+  const { videoEntryReducer: { quizList, currentQuizId, currentVideoId } } = state
+  const quiz = quizList.find(quiz => quiz.id === currentQuizId)
   return {
-    videoData: state.videoEntryReducer.videoList.find(
-      video => video.id === state.videoEntryReducer.currentVideoId,
+    videoData: quiz.videoList.find(
+      video => video.id === currentVideoId,
     ),
   }
 }

@@ -12,6 +12,7 @@ import { connect } from 'react-redux'
 import asyncLoad from 'react-async-loader'
 import styled, { createGlobalStyle } from 'styled-components'
 import Creator from './components/Creator/Creator'
+import HostTool from './components/HostTool/HostTool'
 
 const AppContainer = styled.div`
   background-color: rgb(255, 255, 255);
@@ -85,14 +86,14 @@ function App({ gapi }) {
             <Route path="/creator">
               <StyledCreator />
             </Route>
-            <Route path="/">
-              xd
-            </Route>
             <Route path="/host">
-
+              <HostTool />
             </Route>
             <Route path="/play">
 
+            </Route>
+            <Route path="/">
+              xd
             </Route>
           </Switch>
         </div>

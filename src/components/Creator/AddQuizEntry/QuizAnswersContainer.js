@@ -15,7 +15,6 @@ const AnswerColumn = styled.div`
 const AnswerTable = styled.div`
   display: flex
   margin-left: 2em
-  
 `
 
 const AnswersContainer = styled.div`
@@ -101,8 +100,9 @@ function QuizAnswersContainer({ video, editVideo }) {
 }
 
 const mapStateToProps = state => {
-  const { videoEntryReducer: { videoList, currentVideoId } } = state
-  const video = videoList.find(video => video.id === currentVideoId)
+  const { videoEntryReducer: { quizList, currentQuizId, currentVideoId } } = state
+  const quiz = quizList.find(quiz => quiz.id === currentQuizId)
+  const video = quiz.videoList.find(video => video.id === currentVideoId)
   return { video }
 }
 

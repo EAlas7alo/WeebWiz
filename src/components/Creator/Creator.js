@@ -72,8 +72,8 @@ function Creator({ videoList, addVideo, setCurrentVideo }) {
 }
 
 const mapStateToProps = state => {
-  const { videoEntryReducer: { videoList } } = state
-  return { videoList }
+  const { videoEntryReducer: { quizList, currentQuizId } } = state
+  return { videoList: quizList.find(quiz => quiz.id === currentQuizId).videoList }
 }
 
 const mapDispatchToProps = dispatch => {
